@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+
+    <!-- polyfills -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>IoT Sensor Monitoring</title>
+    <style>
+        #map {
+            height: 500px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    -->
+
+    <div class="container">
+
+        <div class="card p-3 shadow">
+            <h2 class="text-center p-3">IOT Sensor Monitoring</h2>
+            <nav>
+                <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+                    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-monitoring" type="button" role="tab" aria-controls="nav-monitoring"
+                        aria-selected="true">Monitoring</button>
+                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-configuration" type="button" role="tab" aria-controls="nav-configuration"
+                        aria-selected="false">Configuration</button>
+                    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-settings"
+                        type="button" role="tab" aria-controls="nav-settings" aria-selected="false">Settings</button>
+                </div>
+            </nav>
+            <div class="tab-content p-3 border bg-light" id="nav-tabContent">
+                <div class="tab-pane fade active show" id="nav-monitoring" role="tabpanel"
+                    aria-labelledby="nav-monitoring-tab">
+
+                    <div>
+
+                        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mt-2">
+                            <div class="container-fluid">
+                                <a class="navbar-brand" href="#">Sensor Data</a>
+                            </div>
+                        </nav>
+
+                        <div id="sensor_container" class="mt-2">
+                            <div class="d-flex justify-content-center">
+                                <strong>Waiting For Sensor Data...</strong>
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading... </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mt-2">
+                            <div class="container-fluid">
+                                <a class="navbar-brand" href="#">GPS Data</a>
+                            </div>
+                        </nav>
+
+                        <div id="gps_container" class="mt-2">
+                            <div class="d-flex justify-content-center">
+                                <strong>Waiting For GPS Data...</strong>
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading... </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- map section -->
+                        <div class="row mt-2">
+                            <div class="col">
+                                <div id="map"></div>
+                                <script
+                                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRnhz_ShC_KIc8_joDpaPr67QRr0YV3EQ&callback=initMap&v=weekly&channel=2"
+                                    async></script>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="nav-configuration" role="tabpanel"
+                    aria-labelledby="nav-configuration-tab">
+
+                    <div class="container pt-4">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Row Number</th>
+                                        <th class="text-center">Device Name</th>
+                                        <th class="text-center">Address</th>
+                                        <th class="text-center">Span High</th>
+                                        <th class="text-center">Span Low</th>
+                                        <th class="text-center">Description</th>
+                                        <th class="text-center">Remove Row</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn btn-md btn-primary" id="addBtn" type="button">
+                            Add new Row
+                        </button>
+                        <button class="btn btn-md btn-success float-end" id="updateBtn" type="button">
+                            Update
+                        </button>
+
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="nav-settings" role="tabpanel" aria-labelledby="nav-settings-tab">
+                    <p>settings</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+
+        let map;
+        let marker;
+        function initMap() {
+
+            const myLatLng = { lat: 13.067439, lng: 80.237617 };
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: myLatLng,
+                zoom: 12,
+            });
+            marker = new google.maps.Marker({
+                position: myLatLng,
+                //map,
+                title: JSON.stringify(myLatLng),
+            });
+            marker.setMap(map);
+        }
+
+        $(document).ready(function () {
+
+            loadDataOnIntial();
+            // monitoring section 
+
+            const host = "167.233.7.5:8090"
+            //const host = "localhost:8000"
+            const chatSocket = new WebSocket(
+                'ws://' + host + '/ws/app/notifications/'
+            );
+            chatSocket.onmessage = function (e) {
+                const data = JSON.parse(e.data);
+                var parsedMessage = data.message;
+                console.log(data.message);
+
+                // compile the template
+                var mytemplate = $('#SensorTemplate').html()
+                var template = Handlebars.compile(mytemplate);
+                var result = template(parsedMessage.sensor_data);
+
+                var gpstemplate = $('#GpsTemplate').html()
+                var template_gps = Handlebars.compile(gpstemplate);
+                var gps_result = template_gps(parsedMessage.gps_data);
+
+                $('#sensor_container').empty();
+                $('#sensor_container').append(result)
+
+                $('#gps_container').empty();
+                $('#gps_container').append(gps_result)
+
+                var parsedGpsData = parsedMessage.gps_data;
+                let location = { lat: parseFloat(parsedGpsData.latitude), lng: parseFloat(parsedGpsData.longitude) };
+
+                marker.setMap(null);
+                marker = new google.maps.Marker({
+                    position: location,
+                    title: JSON.stringify(location),
+                });
+                marker.setMap(map);
+                map.setCenter(marker.getPosition())
+
+            };
+            chatSocket.onclose = function (e) {
+                console.error('Chat socket closed unexpectedly');
+            };
+
+            // monitoring section 
+
+            // settings section
+
+            var rowIdx = 0;
+
+            // jQuery button click event to add a row
+            $('#addBtn').on('click', function () {
+                var data = {
+                    rowIdx: ++rowIdx,
+                    devicename: "",
+                    address: "",
+                    span_high: "",
+                    span_low:"",
+                    description: ""
+                }
+                var mytemplate = $('#template-sensor').html()
+                var template = Handlebars.compile(mytemplate);
+                var result = template(data);
+                debugger;
+                $('#tbody').append(result);
+            });
+
+            $('#tbody').on('click', '.remove', function () {
+                var id = $(this).attr('id');
+                $(this).closest(`tr#${id}`).remove();
+            });
+
+
+            $('#updateBtn').on('click', function (e) {
+                debugger;
+
+                var postData = getDataWithValidation()
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8000/api/updatesettings",
+                    data: postData,
+                    dataType: "json",
+                    encode: true,
+                }).done(function (data) {
+                    console.log(data);
+                });
+
+            });
+
+            function loadDataOnIntial(){
+                $.ajax({
+                    type: "GET",
+                    url: "http://localhost:8000/api/readsettings",
+                    dataType: "json",
+                    encode: true,
+                }).done(function (data) {
+                    debugger;
+                    data.forEach((rowObj)=>{
+                        rowObj["rowIdx"] = ++rowIdx;
+                        var mytemplate = $('#template-sensor').html()
+                        var template = Handlebars.compile(mytemplate);
+                        var result = template(rowObj);
+                        $('#tbody').append(result);
+                    })
+                });
+            }
+
+            function getDataWithValidation() {
+                let rowData = []
+                $('table > tbody > tr').each((i, ele) => {
+                    let deviceName = $(ele).find(`[data-name=device-name]`)[0].value;
+                    let address = $(ele).find(`[data-name=address]`)[0].value;
+                    let span_high = $(ele).find(`[data-name=intial-value]`)[0].value;
+                    let span_low = $(ele).find(`[data-name=intial-value]`)[0].value;
+                    let description = $(ele).find(`[data-name=description]`)[0].value;
+                    let newRow = {
+                        deviceName, address, span_high, span_low, description
+                    }
+                    rowData.push(newRow)
+                })
+                debugger;
+                return rowData;
+            }
+
+            // settings section
+        });
+
+    </script>
+
+
+    <script id="SensorTemplate" type="text/x-handlebars-template">
+    <div class="row">
+        {{#each this}}
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{tagName}}</h5>
+                    <p id="pressure" class="card-text">{{value}}</p>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</script>
+
+    <script id="GpsTemplate" type="text/x-handlebars-template">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Latitude</h5>
+                    <p id="pressure" class="card-text">{{this.latitude}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Longitude</h5>
+                    <p id="pressure" class="card-text">{{this.longitude}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">SignalStrength</h5>
+                    <p id="pressure" class="card-text">{{this.SignalStrength}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+    <script id="template-sensor" type="text/x-handlebars-template">
+    <tr id="{{rowIdx}}">
+        <td class="row-index text-center">
+            <p>{{rowIdx}}</p>
+        </td>
+        <td>
+            <input type="text" data-name="device-name" name="device-name-{{rowIdx}}" value="{{devicename}}" />
+        </td>
+        <td>
+            <input type="text" data-name="address" name="address-{{rowIdx}}"  value="{{address}}"/>
+        </td>
+        <td>
+            <input type="text" data-name="span_high" name="span_high-{{rowIdx}}"  value="{{span_high}}"/>
+        </td>
+        <td>
+            <input type="text" data-name="span_low" name="span_low-{{rowIdx}}"  value="{{span_low}}"/>
+        </td>
+        <td>
+            <input type="text" data-name="description" name="description-{{rowIdx}}"  value="{{description}}"/>
+        </td>
+        <td class="text-center">
+            <button id="{{rowIdx}}" class="btn btn-danger remove"
+            type="button">Remove</button>
+        </td>
+    </tr>
+
+</script>
+
+</body>
+
+</html>

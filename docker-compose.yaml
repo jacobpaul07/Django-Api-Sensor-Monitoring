@@ -1,0 +1,64 @@
+# __Author__      = " Jacob Paul "
+
+version: '3'
+services:
+
+  backend:
+    image: "siqsessedge/sih_django:v0.1"
+    environment:
+      "APPLICATION_MODE" : "web"
+      "MQTT_BROKER_IP" : "167.233.7.5"
+      "MQTT_BROKER_PORT" : "1883"
+      "MQTT_MESSAGE_TOPIC" : "Test/message"
+      "MONGO_CONNECTION_STRING" : "167.233.7.5:27016"
+    # volumes:
+    #   - "./DockerFiles/JsonConfiguration/:/iot_sm/App/JsonConfiguration/"
+    # devices:
+    #   - /dev/ttyUSB0:/dev/ttyUSB0
+    depends_on:
+      - redis
+      - mongo
+    ports:
+      - "8090:8000"
+    restart: always
+    networks:
+      cnc-network:
+        ipv4_address: 173.12.0.2
+
+  redis:
+    image: "redis:5"
+    ports:
+      - "6379:6379"
+    networks:
+      cnc-network:
+        ipv4_address: 173.12.0.3
+    restart: always
+
+  mongo-express:
+    image: mongo-express
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=173.12.0.4
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+#      - ME_CONFIG_MONGODB_AUTH_USERNAME=devroot
+#      - ME_CONFIG_MONGODB_AUTH_PASSWORD=devroot
+      - ME_CONFIG_BASICAUTH_USERNAME=devroot
+      - ME_CONFIG_BASICAUTH_PASSWORD=devroot
+    depends_on:
+      - mongo
+    ports:
+      - "8888:8081"
+    networks:
+      cnc-network:
+        ipv4_address: 173.12.0.5
+    restart: always
+
+networks:
+  cnc-network:
+    ipam:
+      config:
+        - subnet: 173.12.0.0/16
+
+
+

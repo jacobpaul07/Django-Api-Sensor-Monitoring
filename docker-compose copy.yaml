@@ -1,0 +1,27 @@
+# __Author__      = " Jacob Paul "
+
+version: '3'
+services:
+
+  backend:
+    image: "siqsessedge/socket_listener:v2.0"
+    environment:
+      "MQTT_BROKER_IP": "167.233.7.5"
+      "MQTT_BROKER_PORT": "1883" 
+      "MQTT_MESSAGE_TOPIC": "Test/message"
+      "APPLICATION_MODE": "web"
+      "MONGO_CONNECTION_STRING": "167.233.7.5:27016"
+      "REDIS_IP": "167.233.7.5" 
+      "REDIS_PORT": "6379"
+    ports:
+      - "2022:2022"
+    restart: always
+    networks:
+      cnc-network:
+        ipv4_address: 172.32.0.2
+
+networks:
+  cnc-network:
+    ipam:
+      config:
+        - subnet: 172.32.0.0/16

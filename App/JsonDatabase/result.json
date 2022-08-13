@@ -1,0 +1,26 @@
+{
+    "sensor_data": [
+        {
+            "tagName": "Temperature",
+            "value": 31.3
+        },
+        {
+            "tagName": "Pressure",
+            "value": 71.3
+        },
+        {
+            "tagName": "Flow",
+            "value": 140.8
+        },
+        {
+            "tagName": "LDR",
+            "value": 610.9
+        }
+    ],
+    "last_updated_timestamp": "2022-08-13 21:58:34.902176",
+    "gps_data": {
+        "longitude": "80.270721 N",
+        "latitude": "13.082680 E",
+        "SignalStrength": "Low"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "sensors": [
+        {
+            "devicename": "Flow",
+            "address": "2",
+            "span_high": "65535",
+            "span_low": "0",
+            "description": "Flow 2"
+        },
+        {
+            "devicename": "LDR",
+            "address": "2",
+            "span_high": "65535",
+            "span_low": "0",
+            "description": "LDR"
+        },
+        {
+            "devicename": "Vibration",
+            "address": "6",
+            "span_high": "65535",
+            "span_low": "0",
+            "description": "vib"
+        }
+    ]
+}
