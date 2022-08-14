@@ -145,7 +145,7 @@
 
 
     <script>
-
+        const host = "localhost:8000";
         let map;
         let marker;
         function initMap() {
@@ -168,8 +168,7 @@
             loadDataOnIntial();
             // monitoring section 
 
-            const host = "167.233.7.5:8090"
-            //const host = "localhost:8000"
+            //const host = "167.233.7.5:8000"
             const chatSocket = new WebSocket(
                 'ws://' + host + '/ws/app/notifications/'
             );
@@ -245,10 +244,12 @@
                 debugger;
                 $.ajax({
                     type: "POST",
-                    url: "http://localhost:8000/api/updatesettings",
-                    data: postData,
+                    url: `http://${host}/api/updatesettings`,
+                    data: JSON.stringify(postData),
+                    contentType: 'application/json',
                     dataType: "json",
                     encode: true,
+                    processData: false,
                 }).done(function (data) {
                     console.log(data);
                 });
@@ -258,7 +259,7 @@
             function loadDataOnIntial(){
                 $.ajax({
                     type: "GET",
-                    url: "http://localhost:8000/api/readsettings",
+                    url: `http://${host}/api/readsettings`,
                     dataType: "json",
                     encode: true,
                 }).done(function (data) {
@@ -278,11 +279,11 @@
                 $('table > tbody > tr').each((i, ele) => {
                     let deviceName = $(ele).find(`[data-name=device-name]`)[0].value;
                     let address = $(ele).find(`[data-name=address]`)[0].value;
-                    let span_high = $(ele).find(`[data-name=intial-value]`)[0].value;
-                    let span_low = $(ele).find(`[data-name=intial-value]`)[0].value;
+                    let spanHigh = $(ele).find(`[data-name=span_high]`)[0].value;
+                    let spanLow = $(ele).find(`[data-name=span_low]`)[0].value;
                     let description = $(ele).find(`[data-name=description]`)[0].value;
                     let newRow = {
-                        deviceName, address, span_high, span_low, description
+                        devicename:deviceName, address, span_high:spanHigh, span_low:spanLow, description
                     }
                     rowData.push(newRow)
                 })

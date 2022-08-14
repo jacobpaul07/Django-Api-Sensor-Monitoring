@@ -24,8 +24,9 @@ urlpatterns = [
     path('api/readsettings', views.ReadDeviceSettings().as_view()),
     path('api/updatesettings', views.UpdateDeviceSettings().as_view()),
     path('api/readcomsettings', views.ReadDeviceComSettings().as_view()),
+    path('api/updatecomsettings', views.UpdateDeviceComSettings().as_view()),
 
     # Database URLs
     path('api/readspecifictimedata', history_views.ReadHistoryData().as_view()),
-    path('', views.index_test, name='index'),
+    # path('', views.index_test, name='index'),
 ]
