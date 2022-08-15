@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
-from App.index import read_setting, read_com_setting, write_setting
+from App.index import read_setting, read_com_setting, write_setting, write_com_setting
 from App.RTUReaders.modbus_rtu import modbus_rtu
 
 import json
@@ -13,7 +13,7 @@ def index(request):
 
 
 def index_test(request):
-    return render(request, 'index_new.html')
+    return render(request, 'test.html')
 
 
 class StartRtuService(APIView):
@@ -55,3 +55,14 @@ class ReadDeviceComSettings(APIView):
         raw_setting = read_com_setting()
         dumped_setting = json.dumps(raw_setting, indent=4)
         return HttpResponse(dumped_setting, "application/json")
+
+class UpdateDeviceComSettings(APIView):
+
+    def post(self, request):
+        data = request.body.decode("utf-8")
+        request_data = json.loads(data)
+        print(request_data)
+        write_com_setting(request_data)
+
+        
+        return HttpResponse("Success", "application/json")

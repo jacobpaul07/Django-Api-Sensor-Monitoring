@@ -1,4 +1,5 @@
-"""sih_python_django URL Configuration
+"""
+sih_python_django URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
@@ -28,5 +29,5 @@ urlpatterns = [
 
     # Database URLs
     path('api/readspecifictimedata', history_views.ReadHistoryData().as_view()),
-    # path('', views.index_test, name='index'),
+    path('', views.index_test, name='index'),
 ]

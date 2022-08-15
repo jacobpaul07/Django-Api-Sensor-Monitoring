@@ -3,36 +3,18 @@
 version: '3'
 services:
 
-  backend:
-    image: "siqsessedge/sih-api-python:v1.2"
-    environment:
-      "APPLICATION_MODE" : "edge"
-      "MQTT_BROKER_IP" : "localhost"
-      "MQTT_BROKER_PORT" : "1883"
-      "MQTT_MESSAGE_TOPIC" : "Test/message"
-      "MONGO_CONNECTION_STRING" : "localhost:27016"
-    # volumes:
-    #   - "./DockerFiles/JsonConfiguration/:/iot_sm/App/JsonConfiguration/"
-    devices:
-      - /dev/ttyUSB0:/dev/ttyUSB0
-    depends_on:
-      - redis
-      - mongo
+  mongo:
+    image: "mongo:bionic"
+    container_name: "mongoDB"
     ports:
-      - "8090:8000"
-    restart: always
+      - "27016:27017"
+    volumes:
+      - './DockerFiles/MongoDB/data:/data/db'
     networks:
-      cnc-network:
-        ipv4_address: 173.12.0.2
+      cloud-network:
+        ipv4_address: 173.12.0.4
+    restart: always
 
-  redis:
-    image: "redis:5"
-    ports:
-      - "6379:6379"
-    networks:
-      cnc-network:
-        ipv4_address: 173.12.0.3
-    restart: always
 
   mongo-express:
     image: mongo-express
@@ -50,15 +32,15 @@ services:
     ports:
       - "8888:8081"
     networks:
-      cnc-network:
+      cloud-network:
         ipv4_address: 173.12.0.5
     restart: always
 
+
 networks:
-  cnc-network:
+  cloud-network:
     ipam:
       config:
         - subnet: 173.12.0.0/16
-
 
 

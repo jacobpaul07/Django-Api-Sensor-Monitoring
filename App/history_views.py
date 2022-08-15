@@ -1,13 +1,10 @@
 from django.http import HttpResponse, HttpResponseBadRequest
-from django.shortcuts import render
 from rest_framework.views import APIView
-from App.index import read_setting, read_com_setting, write_setting
-from App.RTUReaders.modbus_rtu import modbus_rtu
 from MongoDB_Main import Document as Doc
 
 import os, sys
 import json
-import App.globalsettings as appsetting
+
 
 class ReadHistoryData(APIView):
 

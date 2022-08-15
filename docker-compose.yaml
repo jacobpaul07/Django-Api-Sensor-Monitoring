@@ -3,20 +3,40 @@
 version: '3'
 services:
   backend:
+    container_name: "sih_backend"
     image: "siqsessedge/sih-api-python:v1.2"
     environment:
-      "MQTT_BROKER_IP": "localhost"
+      "MQTT_BROKER_IP": "167.233.7.5"
       "MQTT_BROKER_PORT": "1883"
       "MQTT_MESSAGE_TOPIC": "IoT_SM/Message"
       "APPLICATION_MODE": "web"
-      "MONGO_CONNECTION_STRING": "localhost:27016"
-      "REDIS_IP": "localhost"
+      "MONGO_CONNECTION_STRING": "167.233.7.5:27017"
+      "REDIS_IP": "172.11.0.3"
       "REDIS_PORT": "6379"
     ports:
-      - "8000:8000"
+      - "8090:8000"
+    volumes:
+      - "/etc/timezone:/etc/timezone"
+      - "/etc/localtime:/etc/localtime"
+    depends_on:
+      - redis
+    # devices:
+    #   - /dev/ttyUSB0:/dev/ttyUSB0
+    networks:
+      sih-sm-network:
+        ipv4_address: 172.11.0.2
     restart: always
   
   redis:
     image: "redis:5"
-    ports:
-      - "6379:6379"
+    container_name: "sih_redis"
+    networks:
+      sih-sm-network:
+        ipv4_address: 172.11.0.3
+    restart: always
+
+networks:
+  sih-sm-network:
+    ipam:
+      config:
+        - subnet: 172.11.0.0/16

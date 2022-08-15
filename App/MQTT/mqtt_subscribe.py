@@ -1,38 +1,15 @@
-import datetime
-import json
 import os
 import sys
 import threading
 
-import dateutil.parser
-
-from MongoDB_Main import Document as Doc
-from channels.layers import get_channel_layer
 from paho.mqtt import client as mqtt_client
-from asgiref.sync import async_to_sync
-from App.Utilities import read_result_file, write_result_file
+from App.Utilities import save_sensor_data
 
 # Environmental Variables
-broker = str(os.environ['MQTT_BROKER_IP'])  # '167.233.7.5'
-port = int(os.environ['MQTT_BROKER_PORT'])  # 1883
+broker = str(os.environ['MQTT_BROKER_IP'])     # '167.233.7.5'
+port = int(os.environ['MQTT_BROKER_PORT'])     # 1883
 topic = str(os.environ['MQTT_MESSAGE_TOPIC'])  # "Test/message"
-
-# broker = "167.233.7.5"
-# port = 1883
-# topic = "Test/message"
 client_id = "jacobsubscriber-001"
-
-
-# Send To Websocket
-def sentLiveData(data):
-    text_data = json.dumps(data, indent=4)
-    loaded_data = json.loads(text_data)
-
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)("notificationGroup", {
-        "type": "chat_message",
-        "message": loaded_data
-    })
 
 
 def connect_mqtt() -> mqtt_client:
@@ -59,35 +36,6 @@ def subscribe(client: mqtt_client):
     client.on_message = on_message
 
 
-def save_sensor_data(message):
-    time_stamp = datetime.datetime.now()
-    loaded_data = json.loads(message)
-
-    result_file_contents = read_result_file()
-    result_file_contents["sensor_data"]: list = loaded_data
-    result_file_contents["last_updated_timestamp"] = str(time_stamp)
-    sentLiveData(result_file_contents)
-
-    # Update Json Data
-    write_result_file(json_content=result_file_contents)
-    # Write data to DB
-    thread = threading.Thread(target=send_to_database, args=[result_file_contents, time_stamp])
-    thread.start()
-
-
-def send_to_database(result_file_contents, time_stamp):
-    try:
-        result_file_contents["last_updated_timestamp"] = dateutil.parser.parse(str(time_stamp))
-        col = "LiveData"
-        print(result_file_contents)
-        Doc().DB_Write(result_file_contents, col)
-    except Exception as ex:
-        print("DataBase Write Error: ", ex)
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        f_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print(exc_type, f_name, exc_tb.tb_lineno)
-
-
 def mqtt_subscribe():
     try:
         print("MQTT Subscriber Started")
@@ -104,4 +52,3 @@ def mqtt_subscribe():
         print("Restarted")
         thread = threading.Thread(target=mqtt_subscribe, args=())
         thread.start()
-

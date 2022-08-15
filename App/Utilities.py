@@ -1,8 +1,27 @@
-import json
 import os
 import sys
+import json
+import datetime
 import threading
+import dateutil.parser
+
+from channels.layers import get_channel_layer
+from MongoDB_Main import Document as Doc
+from asgiref.sync import async_to_sync
+
 thread_Lock = threading.Lock()
+
+
+# Send To Websocket
+def sentLiveData(data):
+    text_data = json.dumps(data, indent=4)
+    loaded_data = json.loads(text_data)
+
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)("notificationGroup", {
+        "type": "chat_message",
+        "message": loaded_data
+    })
 
 
 def write_result_file(json_content):
@@ -43,4 +62,33 @@ def read_result_file():
         print(exc_type, f_name, exc_tb.tb_lineno)
     finally:
         thread_Lock.release()
+
+
+def send_to_database(result_file_contents, time_stamp):
+    try:
+        result_file_contents["last_updated_timestamp"] = dateutil.parser.parse(str(time_stamp))
+        col = "LiveData"
+        print(result_file_contents)
+        Doc().DB_Write(result_file_contents, col)
+    except Exception as ex:
+        print("DataBase Write Error: ", ex)
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        f_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, f_name, exc_tb.tb_lineno)
+
+
+def save_sensor_data(message):
+    time_stamp = datetime.datetime.now()
+    loaded_data = json.loads(message)
+
+    result_file_contents = read_result_file()
+    result_file_contents["sensor_data"]: list = loaded_data
+    result_file_contents["last_updated_timestamp"] = str(time_stamp)
+    sentLiveData(result_file_contents)
+
+    # Update Json Data
+    write_result_file(json_content=result_file_contents)
+    # Write data to DB
+    thread = threading.Thread(target=send_to_database, args=[result_file_contents, time_stamp])
+    thread.start()
 

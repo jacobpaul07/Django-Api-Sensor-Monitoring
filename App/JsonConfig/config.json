@@ -1,25 +1,32 @@
 {
     "sensors": [
         {
-            "devicename": "Flow",
-            "address": "2",
-            "span_high": "65535",
+            "devicename": "Temperature",
+            "address": "6",
+            "span_high": "65",
             "span_low": "0",
-            "description": "Flow 2"
+            "description": "Temperature"
+        },
+        {
+            "devicename": "Pressure",
+            "address": "4",
+            "span_high": "65",
+            "span_low": "0",
+            "description": "Pressure Detection"
+        },
+        {
+            "devicename": "Flow",
+            "address": "10",
+            "span_high": "35",
+            "span_low": "0",
+            "description": "Flow Control"
         },
         {
             "devicename": "LDR",
-            "address": "2",
-            "span_high": "65535",
+            "address": "8",
+            "span_high": "535",
             "span_low": "0",
-            "description": "LDR"
-        },
-        {
-            "devicename": "Vibration",
-            "address": "6",
-            "span_high": "65535",
-            "span_low": "0",
-            "description": "vib"
+            "description": "Light Density"
         }
     ]
 }
