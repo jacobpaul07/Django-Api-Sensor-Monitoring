@@ -109,7 +109,7 @@
                     <h4>Sensor Settings</h4>
                     <div class="container pt-4">
                         <div class="table-responsive">
-                            <table class="table table-bordered">
+                            <table class="table table-borderless">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Row Number</th>
@@ -349,7 +349,7 @@
                     var postData = getComDataWithValidation()
                     axios.post(`http://${host}/api/updatecomsetting`, postData)
                         .then(function () {
-                            alert('com settings updated')
+                            alert('COM settings updated successfully !!')
                         })
                         .catch(function (error) {
                             console.log(error);
@@ -361,7 +361,7 @@
                     var postData = getDataWithValidation()
                     axios.post(`http://${host}/api/updatesettings`, postData)
                         .then(function () {
-                            alert('device settings updated')
+                            alert('Device settings updated successfully !!')
                         })
                         .catch(function (error) {
                             console.log(error);
