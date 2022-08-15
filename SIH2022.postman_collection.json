@@ -1,0 +1,149 @@
+{
+	"info": {
+		"_postman_id": "f2420a31-d9d4-4b0e-8f36-95a44832af5f",
+		"name": "SIH2022",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15448659"
+	},
+	"item": [
+		{
+			"name": "Read Settings",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://167.233.7.5:8091/api/readsettings",
+					"protocol": "http",
+					"host": [
+						"167",
+						"233",
+						"7",
+						"5"
+					],
+					"port": "8091",
+					"path": [
+						"api",
+						"readsettings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Speific Time Data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://167.233.7.5:8091/api/readspecifictimedata?date=2022-08-14T14:03:21%2B05:30",
+					"protocol": "http",
+					"host": [
+						"167",
+						"233",
+						"7",
+						"5"
+					],
+					"port": "8091",
+					"path": [
+						"api",
+						"readspecifictimedata"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2022-08-14T14:03:21%2B05:30"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change Configuration",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n        {\r\n            \"devicename\": \"Temperature\",\r\n            \"address\": \"6\",\r\n            \"span_high\": \"65\",\r\n            \"span_low\": \"0\",\r\n            \"description\": \"Temperature\"\r\n        },\r\n        {\r\n            \"devicename\": \"Pressure\",\r\n            \"address\": \"4\",\r\n            \"span_high\": \"35\",\r\n            \"span_low\": \"0\",\r\n            \"description\": \"Pressure Detection\"\r\n        },\r\n        {\r\n            \"devicename\": \"Flow\",\r\n            \"address\": \"10\",\r\n            \"span_high\": \"35\",\r\n            \"span_low\": \"0\",\r\n            \"description\": \"Flow Control\"\r\n        },\r\n        {\r\n            \"devicename\": \"LDR\",\r\n            \"address\": \"8\",\r\n            \"span_high\": \"555\",\r\n            \"span_low\": \"0\",\r\n            \"description\": \"Light Density\"\r\n        }\r\n    ]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://167.233.7.5:8091/api/updatesettings",
+					"protocol": "http",
+					"host": [
+						"167",
+						"233",
+						"7",
+						"5"
+					],
+					"port": "8091",
+					"path": [
+						"api",
+						"updatesettings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read com Settings",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://167.233.7.5:8090/api/readcomsettings",
+					"protocol": "http",
+					"host": [
+						"167",
+						"233",
+						"7",
+						"5"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"readcomsettings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update com Settings",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"method\": \"rtu\",\r\n    \"port\": \"COM5\",\r\n    \"unit_number\" : \"2\",\r\n    \"baud_rate\": \"9600\",\r\n    \"data_bit\": \"8\",\r\n    \"stop_bit\": \"1\",\r\n    \"timeout\": \"1\",\r\n    \"parity\": \"N\",\r\n    \"rts\": \"False\",\r\n    \"dtr\": \"False\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://167.233.7.5:8091/api/updatecomsettings",
+					"protocol": "http",
+					"host": [
+						"167",
+						"233",
+						"7",
+						"5"
+					],
+					"port": "8091",
+					"path": [
+						"api",
+						"updatecomsettings"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
