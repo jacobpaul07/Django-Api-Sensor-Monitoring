@@ -10,14 +10,13 @@ class SerialDevice:
         SERIALPORT=os.environ['SERIALPORT']
         device = serial.Serial(port=SERIALPORT, baudrate=115200)
         
-
     def serial_write(self, config, tag_name, alert):
         try:
             user_config = config["user"]
             mobile_number = user_config["mobile"]
             message = "{0} {1} is {2}".format(mobile_number, tag_name, alert)
             self.device.write(bytes(message, 'utf-8'))
-            time.sleep(1)
+            time.sleep(5)
             data = self.device.readline()
             print(data)
             return data

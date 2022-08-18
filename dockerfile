@@ -14,5 +14,5 @@ WORKDIR /iot_sm
 COPY . /iot_sm
 
 EXPOSE 8000
-EXPOSE 2022
+
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

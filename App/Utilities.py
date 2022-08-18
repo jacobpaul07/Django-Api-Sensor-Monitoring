@@ -92,8 +92,9 @@ def save_sensor_data(message):
         write_result_file(json_content=result_file_contents)
         
         # Write data to DB
-        thread = threading.Thread(target=send_to_database, args=[result_file_contents, time_stamp])
-        thread.start()
+        if os.environ["APPLICATION_MODE"] == "web":
+            thread = threading.Thread(target=send_to_database, args=[result_file_contents, time_stamp])
+            thread.start()
     except Exception as ex:
         print("Error in save_sensor_data: ", ex)
         exc_type, exc_obj, exc_tb = sys.exc_info()

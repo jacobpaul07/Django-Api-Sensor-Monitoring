@@ -4,7 +4,7 @@ version: '3'
 services:
   backend:
     container_name: "sih_backend"
-    image: "siqsessedge/sih-api-python:v1.2"
+    image: "siqsessedge/sih-api-python:v2.1"
     environment:
       "MQTT_BROKER_IP": "167.233.7.5"
       "MQTT_BROKER_PORT": "1883"
@@ -13,6 +13,7 @@ services:
       "MONGO_CONNECTION_STRING": "167.233.7.5:27017"
       "REDIS_IP": "172.11.0.3"
       "REDIS_PORT": "6379"
+      "SERIALPORT": "COM3"
     ports:
       - "8090:8000"
     volumes:
@@ -22,6 +23,7 @@ services:
       - redis
     # devices:
     #   - /dev/ttyUSB0:/dev/ttyUSB0
+    #   - /dev/ttyUSB1:/dev/ttyUSB1
     networks:
       sih-sm-network:
         ipv4_address: 172.11.0.2

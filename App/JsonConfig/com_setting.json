@@ -1,6 +1,6 @@
 {
     "method": "rtu",
-    "port": "COM4",
+    "port": "COM8",
     "unit_number": "2",
     "baud_rate": "9600",
     "data_bit": "8",

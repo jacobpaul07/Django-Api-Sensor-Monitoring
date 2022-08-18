@@ -68,12 +68,12 @@ def read_rtu(settings, config, callback):
                 if difference_seconds >= 600 or difference_seconds==0:
                     if tag_value > span_high:
                         alert_msg = "High - {0}".format(tag_value) 
-                        SerialDevice.serial_write(config=config, tag_name=tag_name, alert=alert_msg)
+                        SerialDevice().serial_write(config=config, tag_name=tag_name, alert=alert_msg)
                         data["alert_timestamp"]=str(now)
                     
                     elif tag_value < span_low:
                         alert_msg = "Low - {0}".format(tag_value) 
-                        SerialDevice.serial_write(config=config, tag_name=tag_name, alert=alert_msg)
+                        SerialDevice().serial_write(config=config, tag_name=tag_name, alert=alert_msg)
                         data["alert_timestamp"]=str(now)
 
             mqtt_publish(message=datas_list)

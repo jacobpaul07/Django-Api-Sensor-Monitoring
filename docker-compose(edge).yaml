@@ -3,6 +3,41 @@
 version: '3'
 services:
 
+  backend:
+    container_name: "sih_backend"
+    image: "siqsessedge/sih-api-python:v2.0"
+    environment:
+      "MQTT_BROKER_IP": "167.233.7.5"
+      "MQTT_BROKER_PORT": "1883"
+      "MQTT_MESSAGE_TOPIC": "IoT_SM/Message"
+      "APPLICATION_MODE": "web"
+      "MONGO_CONNECTION_STRING": "173.12.0.4:27017"
+      "REDIS_IP": "172.11.0.3"
+      "REDIS_PORT": "6379"
+      "SERIALPORT": "/dev/ttyUSB0"
+    ports:
+      - "8090:8000"
+    volumes:
+      - "/etc/timezone:/etc/timezone"
+      - "/etc/localtime:/etc/localtime"
+    depends_on:
+      - redis
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyUSB1:/dev/ttyUSB1
+    networks:
+      cloud-network:
+        ipv4_address: 172.11.0.2
+    restart: always
+  
+  redis:
+    image: "redis:5"
+    container_name: "sih_redis"
+    networks:
+      cloud-network:
+        ipv4_address: 172.11.0.3
+    restart: always
+
   mongo:
     image: "mongo:bionic"
     container_name: "mongoDB"
