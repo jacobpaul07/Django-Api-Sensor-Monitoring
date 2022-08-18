@@ -2,22 +2,26 @@
     "sensor_data": [
         {
             "tagName": "Temperature",
-            "value": 31.3
+            "value": 26.7,
+            "alert_timestamp": "2022-08-18 00:24:18.085764"
         },
         {
             "tagName": "Pressure",
-            "value": 71.3
+            "value": 0.0,
+            "alert_timestamp": ""
         },
         {
             "tagName": "Flow",
-            "value": 140.8
+            "value": 6550.9,
+            "alert_timestamp": "2022-08-18 00:24:18.085764"
         },
         {
             "tagName": "LDR",
-            "value": 610.9
+            "value": 0.3,
+            "alert_timestamp": "2022-08-18 00:18:10.810781"
         }
     ],
-    "last_updated_timestamp": "2022-08-15 17:06:06.060161",
+    "last_updated_timestamp": "2022-08-18 00:24:33.498401",
     "gps_data": {
         "longitude": "80.270721 N",
         "latitude": "13.082680 E",

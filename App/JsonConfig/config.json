@@ -1,9 +1,13 @@
 {
+    "user":{
+        "name": "Jacob Paul",
+        "mobile": "+919500170717"
+    },
     "sensors": [
         {
             "devicename": "Temperature",
             "address": "6",
-            "span_high": "65",
+            "span_high": "25",
             "span_low": "0",
             "description": "Temperature"
         },
@@ -18,14 +22,14 @@
             "devicename": "Flow",
             "address": "10",
             "span_high": "35",
-            "span_low": "0",
+            "span_low": "1",
             "description": "Flow Control"
         },
         {
             "devicename": "LDR",
             "address": "8",
             "span_high": "535",
-            "span_low": "0",
+            "span_low": "1",
             "description": "Light Density"
         }
     ]
