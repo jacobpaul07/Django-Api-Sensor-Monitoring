@@ -2,7 +2,6 @@ from datetime import datetime
 import json, time
 import sys, os
 import threading
-import pandas
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 from App.MQTT.mqtt_publisher import mqtt_publish
 from channels.layers import get_channel_layer
@@ -58,7 +57,8 @@ def read_rtu(settings, config, callback):
                 tag_value = data["value"]
 
                 if previous_alert_time != "":
-                    previous_alert_time_pds = pandas.to_datetime(previous_alert_time)
+                    # previous_alert_time_pds = pandas.to_datetime(previous_alert_time)
+                    previous_alert_time_pds = datetime.strptime(previous_alert_time, '%Y-%m-%d %H:%M:%S.%f')
                     alert_time_difference = now - previous_alert_time_pds
                     difference_seconds = alert_time_difference.seconds
 
