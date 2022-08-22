@@ -2,7 +2,7 @@
 GPS Interfacing with Raspberry Pi using Pyhton
 http://www.electronicwings.com
 '''
-import serial               #import serial pacakge
+import serial             #import serial pacakge
 from time import sleep
 import webbrowser           #import package for opening link in browser
 import sys                  #import system package
@@ -20,7 +20,7 @@ def GPS_Info():
     
     print("NMEA Time: ", nmea_time,'\n')
     print ("NMEA Latitude:", nmea_latitude,"NMEA Longitude:", nmea_longitude,'\n')
-    
+    print("lat-lon",nmea_latitude,nmea_longitude)
     lat = float(nmea_latitude)                  #convert string into float for calculation
     longi = float(nmea_longitude)               #convertr string into float for calculation
     
@@ -47,7 +47,7 @@ long_in_degrees = 0
 try:
     while True:
         received_data = (str)(ser.readline())                   #read NMEA string received
-        GPGGA_data_available = received_data.find(gpgga_info)   #check for NMEA GPGGA string                 
+        GPGGA_data_available = received_data.find(gpgga_info)   #check for NMEA GPGGA string               
         if (GPGGA_data_available>0):
             GPGGA_buffer = received_data.split("$GPGGA,",1)[1]  #store data coming after "$GPGGA," string 
             NMEA_buff = (GPGGA_buffer.split(','))               #store comma separated data in buffer

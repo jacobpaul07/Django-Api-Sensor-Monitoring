@@ -12,8 +12,8 @@ stopThread: bool = False
 
 def modbus_rtu():
     try:
-        data = read_setting()
         com_setting = read_com_setting()
+        data = read_setting()
 
         # Initializing Threading
         thread = threading.Thread(

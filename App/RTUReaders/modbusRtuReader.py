@@ -9,10 +9,13 @@ from App.Utilities import save_sensor_data
 from asgiref.sync import async_to_sync
 from App.Utilities import read_result_file
 from App.SMS.Serial_Input import SerialDevice
+from App.index import read_setting, read_com_setting
 
 
 print("Jacob")
 def read_rtu(settings, config, callback):
+    config = read_setting()
+    settings = read_com_setting()
     datas_list = []
     c = ModbusClient(method=settings["method"], port=settings["port"],
                      timeout=int(settings["timeout"]),
