@@ -251,7 +251,7 @@
 
 
         <script>
-            const host = "167.233.7.5:8090";
+            const host = "10.9.3.31:8090";
             // const host = "localhost:8000";
             const iconBase = "https://developers.google.com/maps/documentation/javascript/examples/full/images/";
             const icon_src = "https://img.icons8.com/fluency/48/000000/marker-storm.png"
@@ -353,7 +353,7 @@
 
                 $('#updateComBtn').on('click', function () {
                     var postData = getComDataWithValidation()
-                    axios.post(`http://${host}/api/updatecomsetting`, postData)
+                    axios.post(`http://${host}/api/updatecomsettings`, postData)
                         .then(function () {
                             alert('COM settings updated successfully !!')
                         })

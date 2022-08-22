@@ -2,7 +2,7 @@ import json
 
 config_file_path = './App/JsonConfig/config.json'
 com_file_path = './App/JsonConfig/com_setting.json'
-
+usr_file_path = './App/JsonConfig/user.json'
 
 def read_setting():
     try:
@@ -40,3 +40,21 @@ def write_com_setting(json_file_content: str):
             f.close()
     except Exception as ex:
         print("Write Com Setting Error", ex)
+
+def read_usr():
+    try:
+        with open(usr_file_path) as f:
+            json_string = json.load(f)
+            f.close()
+        return json_string
+    except Exception as ex:
+        print("Read User Setting Error", ex)
+
+def write_usr(json_file_content: str):
+    try:
+        json_object = json.dumps(json_file_content, indent=4)
+        with open(usr_file_path, 'w') as f:
+            f.write(json_object)
+            f.close()
+    except Exception as ex:
+        print("Write User Setting Error", ex)

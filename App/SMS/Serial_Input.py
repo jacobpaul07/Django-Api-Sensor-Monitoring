@@ -3,6 +3,7 @@ import sys
 import serial
 import time
 import App.globalsettings as app_setting
+from App.index import read_usr
 
 class SerialDevice:
     if not app_setting.serial_device_started:
@@ -12,14 +13,16 @@ class SerialDevice:
         
     def serial_write(self, config, tag_name, alert):
         try:
-            user_config = config["user"]
-            mobile_number = user_config["mobile"]
-            message = "{0} {1} is {2}".format(mobile_number, tag_name, alert)
-            self.device.write(bytes(message, 'utf-8'))
-            time.sleep(5)
-            data = self.device.readline()
-            print(data)
-            return data
+            users = read_usr()
+            user_list:list = users["user"]
+            for user in user_list:
+                mobile_number = user["mobile"]
+                message = "{0} {1} is {2}".format(mobile_number, tag_name, alert)
+                self.device.write(bytes(message, 'utf-8'))
+                time.sleep(5)
+                data = self.device.readline()
+                print(data)
+                return data
 
         except Exception as ex:
             print("Arduino Error: Device not Detected", ex)
