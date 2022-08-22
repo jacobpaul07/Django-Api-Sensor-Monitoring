@@ -8,6 +8,8 @@ ENV PYTHONUNBUFFERED=1
 
 # Install pip requirements
 COPY requirements.txt .
+RUN python -m pip install --upgrade pip
+# RUN apt-get install gcc libffi-dev libssl-dev python-dev
 RUN python -m pip install -r requirements.txt
 
 WORKDIR /iot_sm

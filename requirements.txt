@@ -1,3 +1,4 @@
+cryptography==2.8
 pymodbus==2.5.2
 requests==2.11.1
 Django==3.2.5

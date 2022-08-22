@@ -1,0 +1,11 @@
+Env
+env
+**/__pycache__
+**/.idea
+**/.vscode
+.git
+*.md
+.cache
+**/org_db_version.json
+**/platform_db_version.json
+**/tmp/
