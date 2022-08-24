@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 import App.views as views
-from App import history_views 
+from App import history_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,7 +29,8 @@ urlpatterns = [
 
     # Database URLs
     path('api/readspecifictimedata', history_views.ReadHistoryData().as_view()),
-    path('', views.index_test, name='index'),
-      path('dashboard', views.dashboard, name='dashboard'),
-      path('device', views.index_test, name='index'),
+    path('', views.dashboard, name='index'),
+    path('dashboard', views.dashboard, name='dashboard'),
+    path('device/<str:deviceid>', views.index_test, name='index'),
+    path('device', views.index_test, name='index'),
 ]
