@@ -1,564 +1,598 @@
-<!doctype html>
-<html lang="en">
+{% extends "base.html" %} {% block content %}
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  #map {
+    height: 500px;
+  }
+</style>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.js"
-        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+<div class="container-fluid">
+  <div class="card p-3 shadow">
+    <h2 class="text-center p-3">IOT Sensor Monitoring</h2>
+    <nav>
+      <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+        <button
+          class="nav-link active"
+          id="nav-home-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#nav-monitoring"
+          type="button"
+          role="tab"
+          aria-controls="nav-monitoring"
+          aria-selected="true"
+        >
+          Monitoring
+        </button>
+        <button
+          class="nav-link"
+          id="nav-profile-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#nav-configuration"
+          type="button"
+          role="tab"
+          aria-controls="nav-configuration"
+          aria-selected="false"
+        >
+          Configuration
+        </button>
+        <button
+          class="nav-link"
+          id="nav-contact-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#nav-settings"
+          type="button"
+          role="tab"
+          aria-controls="nav-settings"
+          aria-selected="false"
+        >
+          Settings
+        </button>
+      </div>
+    </nav>
+    <div class="tab-content p-3 border bg-light" id="nav-tabContent">
+      <div
+        class="tab-pane fade active show"
+        id="nav-monitoring"
+        role="tabpanel"
+        aria-labelledby="nav-monitoring-tab"
+      >
+        <div>
+          <nav class="navbar navbar-expand-lg navbar-dark bg-dark mt-2">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">Sensor Data</a>
+            </div>
+          </nav>
 
-    <!-- polyfills -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+          <div id="sensor_container" class="mt-2">
+            <div class="d-flex justify-content-center">
+              <strong>Waiting For Sensor Data...</strong>
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading... </span>
+              </div>
+            </div>
+          </div>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+          <nav class="navbar navbar-expand-lg navbar-dark bg-dark mt-2">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">GPS Data</a>
+            </div>
+          </nav>
 
-    <title>IoT Sensor Monitoring</title>
-    <style>
-        #map {
-            height: 500px;
-        }
-    </style>
-</head>
+          <div id="gps_container" class="mt-2">
+            <div class="d-flex justify-content-center">
+              <strong>Waiting For GPS Data...</strong>
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading... </span>
+              </div>
+            </div>
+          </div>
 
-<body>
-    <!-- Optional JavaScript; choose one of the two! -->
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
-
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
-    -->
-
-    <div class="container">
-
-        <div class="card p-3 shadow">
-            <h2 class="text-center p-3">IOT Sensor Monitoring</h2>
-            <nav>
-                <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
-                        data-bs-target="#nav-monitoring" type="button" role="tab" aria-controls="nav-monitoring"
-                        aria-selected="true">Monitoring</button>
-                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
-                        data-bs-target="#nav-configuration" type="button" role="tab" aria-controls="nav-configuration"
-                        aria-selected="false">Configuration</button>
-                    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-settings"
-                        type="button" role="tab" aria-controls="nav-settings" aria-selected="false">Settings</button>
-                </div>
-            </nav>
-            <div class="tab-content p-3 border bg-light" id="nav-tabContent">
-                <div class="tab-pane fade active show" id="nav-monitoring" role="tabpanel"
-                    aria-labelledby="nav-monitoring-tab">
-
-                    <div>
-
-                        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mt-2">
-                            <div class="container-fluid">
-                                <a class="navbar-brand" href="#">Sensor Data</a>
-                            </div>
-                        </nav>
-
-                        <div id="sensor_container" class="mt-2">
-                            <div class="d-flex justify-content-center">
-                                <strong>Waiting For Sensor Data...</strong>
-                                <div class="spinner-border" role="status">
-                                    <span class="visually-hidden">Loading... </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mt-2">
-                            <div class="container-fluid">
-                                <a class="navbar-brand" href="#">GPS Data</a>
-                            </div>
-                        </nav>
-
-                        <div id="gps_container" class="mt-2">
-                            <div class="d-flex justify-content-center">
-                                <strong>Waiting For GPS Data...</strong>
-                                <div class="spinner-border" role="status">
-                                    <span class="visually-hidden">Loading... </span>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <!-- map section -->
-                        <div class="row mt-2">
-                            <div class="col">
-                                <div id="map"></div>
-                                <script
-                                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRnhz_ShC_KIc8_joDpaPr67QRr0YV3EQ&callback=initMap&v=weekly&channel=2"
-                                    async></script>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="tab-pane fade" id="nav-configuration" role="tabpanel"
-                    aria-labelledby="nav-configuration-tab">
-                    <h4>Sensor Settings</h4>
-                    <div class="container pt-4">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Row Number</th>
-                                        <th class="text-center">Device Name</th>
-                                        <th class="text-center">Address</th>
-                                        <th class="text-center">Span High</th>
-                                        <th class="text-center">Span Low</th>
-                                        <th class="text-center">Description</th>
-                                        <th class="text-center">Remove Row</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody">
-
-                                </tbody>
-                            </table>
-                        </div>
-                        <button class="btn btn-md btn-primary" id="addBtn" type="button">
-                            Add new Row
-                        </button>
-                        <button class="btn btn-md btn-success float-end" id="updateBtn" type="button">
-                            Update
-                        </button>
-
-                    </div>
-
-                </div>
-                <div class="tab-pane fade" id="nav-settings" role="tabpanel" aria-labelledby="nav-settings-tab">
-                    <h4>COM Settings</h4>
-                    <div class="row" style="padding-left: 80px;">
-                        <div class="col-md-6">
-                            <div class="row m-2">
-                                <div class="col-md-4">
-                                    <label for="method" class="col-form-label">Method</label>
-                                </div>
-                                <div class="col-auto">
-                                    <input type="text" id="method" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="row m-2">
-                                <div class="col-md-4">
-                                    <label for="port" class="col-form-label">Port</label>
-                                </div>
-                                <div class="col-auto">
-                                    <input type="text" id="port" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="row m-2">
-                                <div class="col-md-4">
-                                    <label for="unit_number" class="col-form-label">Unit Number</label>
-                                </div>
-                                <div class="col-auto">
-                                    <input type="text" id="unit_number" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="row m-2">
-                                <div class="col-md-4">
-                                    <label for="baud_rate" class="col-form-label">Baud Rate</label>
-                                </div>
-                                <div class="col-auto">
-                                    <input type="text" id="baud_rate" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="row m-2">
-                                <div class="col-md-4">
-                                    <label for="data_bit" class="col-form-label">Data Bit</label>
-                                </div>
-                                <div class="col-auto">
-                                    <input type="text" id="data_bit" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row m-2">
-                                <div class="col-md-3">
-                                    <label for="stop_bit" class="col-form-label">Stop Bit</label>
-                                </div>
-                                <div class="col-auto">
-                                    <input type="text" id="stop_bit" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="row m-2">
-                                <div class="col-md-3">
-                                    <label for="timeout" class="col-form-label">Timeout</label>
-                                </div>
-                                <div class="col-auto">
-                                    <input type="text" id="timeout" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="row m-2">
-                                <div class="col-md-3">
-                                    <label for="parity" class="col-form-label">Parity</label>
-                                </div>
-                                <div class="col-auto">
-                                    <select class="form-select" id="parity">
-                                        <option value="Y">Yes</option>
-                                        <option selected value="N">No</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row m-2">
-                                <div class="col-md-3">
-                                    <label for="rts" class="col-form-label">RTS</label>
-                                </div>
-                                <div class="col-auto">
-                                    <select class="form-select" id="rts">
-                                        <option value="True">TRUE</option>
-                                        <option selected value="False">FALSE</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row m-2">
-                                <div class="col-md-3">
-                                    <label for="dtr" class="col-form-label">DTR</label>
-                                </div>
-                                <div class="col-auto">
-                                    <select class="form-select" id="dtr">
-                                        <option value="True">TRUE</option>
-                                        <option selected value="False">FALSE</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button class="btn btn-md btn-success me-md-2" id="updateComBtn" type="button">
-                                Update
-                            </button>
-                        </div>
-                    </div>
-                </div>
+          <!-- map section -->
+          <div class="row mt-2">
+            <div class="col">
+              <div id="map"></div>
+              <script
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRnhz_ShC_KIc8_joDpaPr67QRr0YV3EQ&callback=initMap&v=weekly&channel=2"
+                async
+              ></script>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="tab-pane fade"
+        id="nav-configuration"
+        role="tabpanel"
+        aria-labelledby="nav-configuration-tab"
+      >
+        <h4>Sensor Settings</h4>
+        <div class="container pt-4">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="text-center">Row Number</th>
+                  <th class="text-center">Device Name</th>
+                  <th class="text-center">Address</th>
+                  <th class="text-center">Span High</th>
+                  <th class="text-center">Span Low</th>
+                  <th class="text-center">Description</th>
+                  <th class="text-center">Remove Row</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+          <button class="btn btn-md btn-primary" id="addBtn" type="button">
+            Add new Row
+          </button>
+          <button
+            class="btn btn-md btn-success float-end"
+            id="updateBtn"
+            type="button"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+      <div
+        class="tab-pane fade"
+        id="nav-settings"
+        role="tabpanel"
+        aria-labelledby="nav-settings-tab"
+      >
+        <h4>COM Settings</h4>
+        <div class="row" style="padding-left: 80px">
+          <div class="col-md-6">
+            <div class="row m-2">
+              <div class="col-md-4">
+                <label for="method" class="col-form-label">Method</label>
+              </div>
+              <div class="col-auto">
+                <input type="text" id="method" class="form-control" />
+              </div>
             </div>
 
-        </div>
-
-
-        <script>
-            const host = "localhost:8000";
-            let map;
-            let marker;
-            function initMap() {
-
-                const myLatLng = { lat: 13.067439, lng: 80.237617 };
-                map = new google.maps.Map(document.getElementById("map"), {
-                    center: myLatLng,
-                    zoom: 12,
-                });
-                marker = new google.maps.Marker({
-                    position: myLatLng,
-                    //map,
-                    title: JSON.stringify(myLatLng),
-                });
-                marker.setMap(map);
-            }
-
-            $(document).ready(function () {
-
-                loadDataOnIntial();
-                loadComSettings()
-                // monitoring section 
-
-                //const host = "167.233.7.5:8000"
-                const chatSocket = new WebSocket(
-                    'ws://' + host + '/ws/app/notifications/'
-                );
-                chatSocket.onmessage = function (e) {
-                    const data = JSON.parse(e.data);
-                    var parsedMessage = data.message;
-                    console.log(data.message);
-
-                    // compile the template
-                    var mytemplate = $('#SensorTemplate').html()
-                    var template = Handlebars.compile(mytemplate);
-                    var result = template(parsedMessage.sensor_data);
-
-                    var gpstemplate = $('#GpsTemplate').html()
-                    var template_gps = Handlebars.compile(gpstemplate);
-                    var gps_result = template_gps(parsedMessage.gps_data);
-
-                    $('#sensor_container').empty();
-                    $('#sensor_container').append(result)
-
-                    $('#gps_container').empty();
-                    $('#gps_container').append(gps_result)
-
-                    var parsedGpsData = parsedMessage.gps_data;
-                    let location = { lat: parseFloat(parsedGpsData.latitude), lng: parseFloat(parsedGpsData.longitude) };
-
-                    marker.setMap(null);
-                    marker = new google.maps.Marker({
-                        position: location,
-                        title: JSON.stringify(location),
-                    });
-                    marker.setMap(map);
-                    map.setCenter(marker.getPosition())
-
-                };
-                chatSocket.onclose = function (e) {
-                    console.error('Chat socket closed unexpectedly');
-                };
-
-                // monitoring section 
-
-                // settings section
-
-                var rowIdx = 0;
-
-                // jQuery button click event to add a row
-                $('#addBtn').on('click', function () {
-                    var data = {
-                        rowIdx: ++rowIdx,
-                        devicename: "",
-                        address: "",
-                        span_high: "",
-                        span_low: "",
-                        description: ""
-                    }
-                    var mytemplate = $('#template-sensor').html()
-                    var template = Handlebars.compile(mytemplate);
-                    var result = template(data);
-                    $('#tbody').append(result);
-                });
-
-                $('#tbody').on('click', '.remove', function () {
-                    var id = $(this).attr('id');
-                    $(this).closest(`tr#${id}`).remove();
-                });
-
-                $('#updateComBtn').on('click', function () {
-                    var postData = getComDataWithValidation()
-                    $.ajax({
-                        type: "POST",
-                        url: `http://${host}/api/updatecomsettings`,
-                        data: JSON.stringify(postData),
-                        contentType: 'application/json',
-                        dataType: "json",
-                        encode: true,
-                        processData: false,
-                    })
-                        .done(function (success) {
-                            debugger;
-                            alert('COM setting updated successfully')
-                        })
-
-                        .fail(function (success) {
-                            debugger;
-                            alert('Unsuccessful COM setting update')
-                        })
-                })
-
-                $('#updateBtn').on('click', function (e) {
-                    var postData = getDataWithValidation()
-                    $.ajax({
-                        type: "POST",
-                        url: `http://${host}/api/updatesettings`,
-                        data: JSON.stringify(postData),
-                        contentType: 'application/json',
-                        dataType: "json",
-                        encode: true,
-                        processData: false,
-                    })
-                        .done(function (success) {
-                            debugger;
-                            alert('COM setting updated successfully')
-                        })
-                        .fail(function (success) {
-                            debugger;
-                            alert('Unsuccessful')
-                        })
-
-                });
-
-                function loadComSettings() {
-                    $.ajax({
-                        type: "GET",
-                        url: `http://${host}/api/readcomsettings`,
-                        dataType: "json",
-                        encode: true,
-                    }).done(function (data) {
-                        let method = data["method"];
-                        let port = data["port"];
-                        let unitNumber = data["unit_number"];
-                        let baudRate = data["baud_rate"];
-                        let dataBit = data["data_bit"];
-                        let stopBit = data["stop_bit"];
-                        let timeout = data["timeout"];
-                        let parity = data["parity"];
-                        let rts = data["rts"];
-                        let dtr = data["dtr"];
-
-                        $(`#method`).val(method);
-                        $(`#port`).val(port);
-                        $(`#unit_number`).val(unitNumber);
-                        $(`#baud_rate`).val(baudRate);
-                        $(`#data_bit`).val(dataBit);
-                        $(`#stop_bit`).val(stopBit);
-                        $(`#timeout`).val(timeout);
-                        $(`#parity`).val(parity);
-                        $(`#rts`).val(rts);
-                        $(`#dtr`).val(dtr);
-
-                    });
-
-                }
-
-
-                function loadDataOnIntial() {
-                    $.ajax({
-                        type: "GET",
-                        url: `http://${host}/api/readsettings`,
-                        dataType: "json",
-                        encode: true,
-                    }).done(function (data) {
-                        data.forEach((rowObj) => {
-                            rowObj["rowIdx"] = ++rowIdx;
-                            var mytemplate = $('#template-sensor').html()
-                            var template = Handlebars.compile(mytemplate);
-                            var result = template(rowObj);
-                            $('#tbody').append(result);
-                        })
-                    });
-                }
-
-                function getDataWithValidation() {
-                    let rowData = []
-                    $('table > tbody > tr').each((i, ele) => {
-                        let deviceName = $(ele).find(`[data-name=device-name]`).val();
-                        let address = $(ele).find(`[data-name=address]`).val();
-                        let spanHigh = $(ele).find(`[data-name=span_high]`).val();
-                        let spanLow = $(ele).find(`[data-name=span_low]`).val();
-                        let description = $(ele).find(`[data-name=description]`).val();
-                        let newRow = {
-                            devicename: deviceName, address, span_high: spanHigh, span_low: spanLow, description
-                        }
-                        rowData.push(newRow)
-                    })
-                    return rowData;
-                }
-
-                function getComDataWithValidation() {
-                    deviceData = {};
-                    let method = $(`#method`).val();
-                    let port = $(`#port`).val();
-                    let unitNumber = $(`#unit_number`).val();
-                    let baudRate = $(`#baud_rate`).val();
-                    let dataBit = $(`#data_bit`).val();
-                    let stopBit = $(`#stop_bit`).val();
-                    let timeout = $(`#timeout`).val();
-                    let parity = $(`#parity`).val();
-                    let rts = $(`#rts`).val();
-                    let dtr = $(`#dtr`).val();
-
-                    deviceData["method"] = method
-                    deviceData["port"] = port
-                    deviceData["unit_number"] = unitNumber
-                    deviceData["baud_rate"] = baudRate
-                    deviceData["data_bit"] = dataBit
-                    deviceData["stop_bit"] = stopBit
-                    deviceData["timeout"] = timeout
-                    deviceData["parity"] = parity
-                    deviceData["rts"] = rts
-                    deviceData["dtr"] = dtr
-                    return deviceData;
-                }
-
-                // settings section
-            });
-
-        </script>
-
-
-        <script id="SensorTemplate" type="text/x-handlebars-template">
-    <div class="row">
-        {% for my_item in result %}
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{my_item.tagName}}</h5>
-                    <p id="pressure" class="card-text">{{my_item.value}}</p>
-                </div>
+            <div class="row m-2">
+              <div class="col-md-4">
+                <label for="port" class="col-form-label">Port</label>
+              </div>
+              <div class="col-auto">
+                <input type="text" id="port" class="form-control" />
+              </div>
             </div>
+
+            <div class="row m-2">
+              <div class="col-md-4">
+                <label for="unit_number" class="col-form-label"
+                  >Unit Number</label
+                >
+              </div>
+              <div class="col-auto">
+                <input type="text" id="unit_number" class="form-control" />
+              </div>
+            </div>
+
+            <div class="row m-2">
+              <div class="col-md-4">
+                <label for="baud_rate" class="col-form-label">Baud Rate</label>
+              </div>
+              <div class="col-auto">
+                <input type="text" id="baud_rate" class="form-control" />
+              </div>
+            </div>
+
+            <div class="row m-2">
+              <div class="col-md-4">
+                <label for="data_bit" class="col-form-label">Data Bit</label>
+              </div>
+              <div class="col-auto">
+                <input type="text" id="data_bit" class="form-control" />
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="row m-2">
+              <div class="col-md-3">
+                <label for="stop_bit" class="col-form-label">Stop Bit</label>
+              </div>
+              <div class="col-auto">
+                <input type="text" id="stop_bit" class="form-control" />
+              </div>
+            </div>
+
+            <div class="row m-2">
+              <div class="col-md-3">
+                <label for="timeout" class="col-form-label">Timeout</label>
+              </div>
+              <div class="col-auto">
+                <input type="text" id="timeout" class="form-control" />
+              </div>
+            </div>
+
+            <div class="row m-2">
+              <div class="col-md-3">
+                <label for="parity" class="col-form-label">Parity</label>
+              </div>
+              <div class="col-auto">
+                <select class="form-select" id="parity">
+                  <option value="Y">Yes</option>
+                  <option selected value="N">No</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row m-2">
+              <div class="col-md-3">
+                <label for="rts" class="col-form-label">RTS</label>
+              </div>
+              <div class="col-auto">
+                <select class="form-select" id="rts">
+                  <option value="True">TRUE</option>
+                  <option selected value="False">FALSE</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row m-2">
+              <div class="col-md-3">
+                <label for="dtr" class="col-form-label">DTR</label>
+              </div>
+              <div class="col-auto">
+                <select class="form-select" id="dtr">
+                  <option value="True">TRUE</option>
+                  <option selected value="False">FALSE</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button
+              class="btn btn-md btn-success me-md-2"
+              id="updateComBtn"
+              type="button"
+            >
+              Update
+            </button>
+          </div>
         </div>
-        {% endfor %}
+      </div>
     </div>
-</script>
+  </div>
 
-        <script id="GpsTemplate" type="text/x-handlebars-template">
+  <script>
+    {% comment %} host declare in base.html {% endcomment %}
+    {% comment %} const host = "localhost:8000"; {% endcomment %}
+    let map;
+    let marker;
+    function initMap() {
+      const myLatLng = { lat: 13.067439, lng: 80.237617 };
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: myLatLng,
+        zoom: 12,
+      });
+      marker = new google.maps.Marker({
+        position: myLatLng,
+        //map,
+        title: JSON.stringify(myLatLng),
+      });
+      marker.setMap(map);
+    }
+
+    $(document).ready(function () {
+      loadDataOnIntial();
+      loadComSettings();
+      // monitoring section
+
+      //const host = "167.233.7.5:8000"
+      const chatSocket = new WebSocket(
+        "ws://" + host + "/ws/app/notifications/"
+      );
+      chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        var parsedMessage = data.message;
+        console.log(data.message);
+
+        // compile the template
+        var mytemplate = $("#SensorTemplate").html();
+        var template = Handlebars.compile(mytemplate);
+        var result = template(parsedMessage.sensor_data);
+
+        var gpstemplate = $("#GpsTemplate").html();
+        var template_gps = Handlebars.compile(gpstemplate);
+        var gps_result = template_gps(parsedMessage.gps_data);
+
+        $("#sensor_container").empty();
+        $("#sensor_container").append(result);
+
+        $("#gps_container").empty();
+        $("#gps_container").append(gps_result);
+
+        var parsedGpsData = parsedMessage.gps_data;
+        let location = {
+          lat: parseFloat(parsedGpsData.latitude),
+          lng: parseFloat(parsedGpsData.longitude),
+        };
+
+        marker.setMap(null);
+        marker = new google.maps.Marker({
+          position: location,
+          title: JSON.stringify(location),
+        });
+        marker.setMap(map);
+        map.setCenter(marker.getPosition());
+      };
+      chatSocket.onclose = function (e) {
+        console.error("Chat socket closed unexpectedly");
+      };
+
+      // monitoring section
+
+      // settings section
+
+      var rowIdx = 0;
+
+      // jQuery button click event to add a row
+      $("#addBtn").on("click", function () {
+        var data = {
+          rowIdx: ++rowIdx,
+          devicename: "",
+          address: "",
+          span_high: "",
+          span_low: "",
+          description: "",
+        };
+        var mytemplate = $("#template-sensor").html();
+        var template = Handlebars.compile(mytemplate);
+        var result = template(data);
+        $("#tbody").append(result);
+      });
+
+      $("#tbody").on("click", ".remove", function () {
+        var id = $(this).attr("id");
+        $(this).closest(`tr#${id}`).remove();
+      });
+
+      $("#updateComBtn").on("click", function () {
+        var postData = getComDataWithValidation();
+        $.ajax({
+          type: "POST",
+          url: `http://${host}/api/updatecomsettings`,
+          data: JSON.stringify(postData),
+          contentType: "application/json",
+          dataType: "json",
+          encode: true,
+          processData: false,
+        })
+          .done(function (success) {
+            debugger;
+            alert("COM setting updated successfully");
+          })
+
+          .fail(function (success) {
+            debugger;
+            alert("Unsuccessful COM setting update");
+          });
+      });
+
+      $("#updateBtn").on("click", function (e) {
+        var postData = getDataWithValidation();
+        $.ajax({
+          type: "POST",
+          url: `http://${host}/api/updatesettings`,
+          data: JSON.stringify(postData),
+          contentType: "application/json",
+          dataType: "json",
+          encode: true,
+          processData: false,
+        })
+          .done(function (success) {
+            debugger;
+            alert("COM setting updated successfully");
+          })
+          .fail(function (success) {
+            debugger;
+            alert("Unsuccessful");
+          });
+      });
+
+      function loadComSettings() {
+        $.ajax({
+          type: "GET",
+          url: `http://${host}/api/readcomsettings`,
+          dataType: "json",
+          encode: true,
+        }).done(function (data) {
+          let method = data["method"];
+          let port = data["port"];
+          let unitNumber = data["unit_number"];
+          let baudRate = data["baud_rate"];
+          let dataBit = data["data_bit"];
+          let stopBit = data["stop_bit"];
+          let timeout = data["timeout"];
+          let parity = data["parity"];
+          let rts = data["rts"];
+          let dtr = data["dtr"];
+
+          $(`#method`).val(method);
+          $(`#port`).val(port);
+          $(`#unit_number`).val(unitNumber);
+          $(`#baud_rate`).val(baudRate);
+          $(`#data_bit`).val(dataBit);
+          $(`#stop_bit`).val(stopBit);
+          $(`#timeout`).val(timeout);
+          $(`#parity`).val(parity);
+          $(`#rts`).val(rts);
+          $(`#dtr`).val(dtr);
+        });
+      }
+
+      function loadDataOnIntial() {
+        $.ajax({
+          type: "GET",
+          url: `http://${host}/api/readsettings`,
+          dataType: "json",
+          encode: true,
+        }).done(function (data) {
+          data.forEach((rowObj) => {
+            rowObj["rowIdx"] = ++rowIdx;
+            var mytemplate = $("#template-sensor").html();
+            var template = Handlebars.compile(mytemplate);
+            var result = template(rowObj);
+            $("#tbody").append(result);
+          });
+        });
+      }
+
+      function getDataWithValidation() {
+        let rowData = [];
+        $("table > tbody > tr").each((i, ele) => {
+          let deviceName = $(ele).find(`[data-name=device-name]`).val();
+          let address = $(ele).find(`[data-name=address]`).val();
+          let spanHigh = $(ele).find(`[data-name=span_high]`).val();
+          let spanLow = $(ele).find(`[data-name=span_low]`).val();
+          let description = $(ele).find(`[data-name=description]`).val();
+          let newRow = {
+            devicename: deviceName,
+            address,
+            span_high: spanHigh,
+            span_low: spanLow,
+            description,
+          };
+          rowData.push(newRow);
+        });
+        return rowData;
+      }
+
+      function getComDataWithValidation() {
+        deviceData = {};
+        let method = $(`#method`).val();
+        let port = $(`#port`).val();
+        let unitNumber = $(`#unit_number`).val();
+        let baudRate = $(`#baud_rate`).val();
+        let dataBit = $(`#data_bit`).val();
+        let stopBit = $(`#stop_bit`).val();
+        let timeout = $(`#timeout`).val();
+        let parity = $(`#parity`).val();
+        let rts = $(`#rts`).val();
+        let dtr = $(`#dtr`).val();
+
+        deviceData["method"] = method;
+        deviceData["port"] = port;
+        deviceData["unit_number"] = unitNumber;
+        deviceData["baud_rate"] = baudRate;
+        deviceData["data_bit"] = dataBit;
+        deviceData["stop_bit"] = stopBit;
+        deviceData["timeout"] = timeout;
+        deviceData["parity"] = parity;
+        deviceData["rts"] = rts;
+        deviceData["dtr"] = dtr;
+        return deviceData;
+      }
+
+      // settings section
+    });
+  </script>
+  {% verbatim %}
+  <script id="SensorTemplate" type="text/x-handlebars-template">
     <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Latitude</h5>
-                    <p id="pressure" class="card-text">{{this.latitude}}</p>
-                </div>
-            </div>
+      {{#each this}}
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{tagName}}</h5>
+            <p id="pressure" class="card-text">{{value}}</p>
+          </div>
         </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Longitude</h5>
-                    <p id="pressure" class="card-text">{{this.longitude}}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">SignalStrength</h5>
-                    <p id="pressure" class="card-text">{{this.SignalStrength}}</p>
-                </div>
-            </div>
-        </div>
+      </div>
+      {% endfor %}
     </div>
-</script>
+  </script>
+  {% endverbatim %}
 
+  <script id="GpsTemplate" type="text/x-handlebars-template">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Latitude</h5>
+            <p id="pressure" class="card-text">{{this.latitude}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Longitude</h5>
+            <p id="pressure" class="card-text">{{this.longitude}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">SignalStrength</h5>
+            <p id="pressure" class="card-text">{{this.SignalStrength}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </script>
 
-        <script id="template-sensor" type="text/x-handlebars-template">
+  <script id="template-sensor" type="text/x-handlebars-template">
     <tr id="{{rowIdx}}">
-        <td class="row-index text-center">
-            <p>{{rowIdx}}</p>
-        </td>
-        <td>
-            <input type="text" data-name="device-name" name="device-name-{{rowIdx}}" value="{{devicename}}" />
-        </td>
-        <td>
-            <input type="text" data-name="address" name="address-{{rowIdx}}"  value="{{address}}"/>
-        </td>
-        <td>
-            <input type="text" data-name="span_high" name="span_high-{{rowIdx}}"  value="{{span_high}}"/>
-        </td>
-        <td>
-            <input type="text" data-name="span_low" name="span_low-{{rowIdx}}"  value="{{span_low}}"/>
-        </td>
-        <td>
-            <input type="text" data-name="description" name="description-{{rowIdx}}"  value="{{description}}"/>
-        </td>
-        <td class="text-center">
-            <button id="{{rowIdx}}" class="btn btn-danger remove"
-            type="button">Remove</button>
-        </td>
+      <td class="row-index text-center">
+        <p>{{rowIdx}}</p>
+      </td>
+      <td>
+        <input
+          type="text"
+          data-name="device-name"
+          name="device-name-{{rowIdx}}"
+          value="{{devicename}}"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          data-name="address"
+          name="address-{{rowIdx}}"
+          value="{{address}}"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          data-name="span_high"
+          name="span_high-{{rowIdx}}"
+          value="{{span_high}}"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          data-name="span_low"
+          name="span_low-{{rowIdx}}"
+          value="{{span_low}}"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          data-name="description"
+          name="description-{{rowIdx}}"
+          value="{{description}}"
+        />
+      </td>
+      <td class="text-center">
+        <button
+          id="{{rowIdx}}"
+          class="btn btn-danger remove"
+          type="button"
+        >Remove</button>
+      </td>
     </tr>
+  </script>
+</div>
 
-</script>
-
-</body>
-
-</html>
+{% endblock content %}

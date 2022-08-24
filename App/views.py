@@ -15,6 +15,9 @@ def index(request):
 def index_test(request):
     return render(request, 'test.html')
 
+def dashboard(request):
+    return render(request, 'dashboard.html')
+
 
 class StartRtuService(APIView):
     @staticmethod

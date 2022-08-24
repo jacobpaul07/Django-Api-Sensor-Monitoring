@@ -30,4 +30,6 @@ urlpatterns = [
     # Database URLs
     path('api/readspecifictimedata', history_views.ReadHistoryData().as_view()),
     path('', views.index_test, name='index'),
+      path('dashboard', views.dashboard, name='dashboard'),
+      path('device', views.index_test, name='index'),
 ]

@@ -1,0 +1,163 @@
+{% extends "base.html" %} {% block content %}
+
+<style>
+  #map {
+    height: 500px;
+  }
+  .online {
+    border-left: solid green;
+  }
+  .offline {
+    border-left: solid red;
+  }
+</style>
+
+<div class="container-fluid">
+  <!-- start page title -->
+  <div class="row">
+    <div class="col-12">
+      <div class="page-title-box">
+        <h4 class="page-title mt-3" style="text-align: center; color: blue">
+          IOT Device Monitoring
+        </h4>
+      </div>
+    </div>
+  </div>
+  <!-- end page title -->
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="row">
+        <div id="dashboard_container"></div>
+      </div>
+    </div>
+  </div>
+  <!-- end row -->
+
+  <div class="row mt-2">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="header-title">Containers By Location</h4>
+          </div>
+          <div class="mb-4 mt-3">
+            <div id="map"></div>
+            <script
+              src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRnhz_ShC_KIc8_joDpaPr67QRr0YV3EQ&callback=initMap&v=weekly&channel=2"
+              async
+            ></script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let map;
+  let marker;
+  function initMap() {
+    const deviceLocations = [
+      { lat: 13.067439, lng: 80.237617 },
+      { lat: 12.067439, lng: 81.237617 },
+      { lat: 10.067439, lng: 82.237617 },
+      { lat: 14.067439, lng: 83.237617 },
+    ];
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: deviceLocations[0],
+      zoom: 12,
+    });
+    deviceLocations.forEach((loc) => {
+      let marker = new google.maps.Marker({
+        position: loc,
+        title: JSON.stringify(loc),
+      });
+      marker.setMap(map);
+    });
+  }
+
+  $(document).ready(function () {
+    const defaulDashboard = [
+      {
+        device_name: "Device one",
+        device_status: "online",
+        device_id: "device-1"
+      },
+      {
+        device_name: "Device two",
+        device_status: "online",
+        device_id: "device-2"
+      },
+      {
+        device_name: "Device three",
+        device_status: "online",
+        device_id: "device-3"
+      },
+      {
+        device_name: "Device four",
+        device_status: "offline",
+        device_id: "device-4"
+      },
+    ];
+
+    const loadDeviceList = () => {
+      var dashboardTemplate = $("#DashBoardTemplate").html();
+      var compiledDashboard = Handlebars.compile(dashboardTemplate);
+      var dashboard_html = compiledDashboard(defaulDashboard);
+      debugger;
+      $("#dashboard_container").empty();
+      $("#dashboard_container").append(dashboard_html);
+    };
+    loadDeviceList();
+
+    $(".card[data-device-id]").on('click', (e)=>{
+        let device_id = e.tarrget.getAttr('data-device-id');
+        window.location(`/device/${device_id}`)
+    } )
+  });
+</script>
+
+{% verbatim %}
+
+<script id="DashBoardTemplate" type="text/x-handlebars-template">
+  <div class="row">
+    {{#each this}}
+
+      <div class="col-sm-3 mt-2 mb-2">
+        {{#iff device_status '==' 'online'}}
+        <div class="card text-dark bg-light online">
+        {{else}}
+        <div class="card text-dark bg-light offline" data-device-id={{device_id}}>
+        {{/iff}}
+
+          <div class="card-body">
+            <div class="float-end">
+                {{#iff device_status '==' 'online'}}
+                <i class="fa-solid fa-satellite-dish " style="font-size:35px;color:green;"></i>
+                {{else}}
+                <i class="fa-solid fa-satellite-dish" style="font-size:35px;color:red;"></i>
+                {{/iff}}
+            </div>
+
+            <h5
+              class="text-muted fw-normal mt-0"
+              title="Average Revenue"
+            >{{device_name}}</h5>
+            <h3 class="mt-3 mb-3">$6,254</h3>
+            <p class="mb-0 text-muted">
+              <span class="text-danger me-2"><i
+                  class="mdi mdi-arrow-down-bold"
+                ></i>
+
+                7.00%</span>
+              <span class="text-nowrap">{{device_status}}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+    {{/each}}
+  </div>
+</script>
+{% endverbatim %} {% endblock content %}
