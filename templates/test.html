@@ -261,8 +261,6 @@
   </div>
 
   <script>
-    {% comment %} host declare in base.html {% endcomment %}
-    {% comment %} const host = "localhost:8000"; {% endcomment %}
     let map;
     let marker;
     function initMap() {
@@ -292,7 +290,7 @@
         const data = JSON.parse(e.data);
         var parsedMessage = data.message;
         console.log(data.message);
-
+        debugger;
         // compile the template
         var mytemplate = $("#SensorTemplate").html();
         var template = Handlebars.compile(mytemplate);
@@ -497,18 +495,17 @@
   <script id="SensorTemplate" type="text/x-handlebars-template">
     <div class="row">
       {{#each this}}
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">{{tagName}}</h5>
-            <p id="pressure" class="card-text">{{value}}</p>
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{tagName}}</h5>
+              <p id="pressure" class="card-text">{{value}}</p>
+            </div>
           </div>
         </div>
-      </div>
-      {% endfor %}
+      {{/each}}
     </div>
   </script>
-  {% endverbatim %}
 
   <script id="GpsTemplate" type="text/x-handlebars-template">
     <div class="row">
@@ -516,7 +513,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Latitude</h5>
-            <p id="pressure" class="card-text">{{this.latitude}}</p>
+            <p id="pressure" class="card-text">{{this.latitude}}"</p>
           </div>
         </div>
       </div>
@@ -593,6 +590,8 @@
       </td>
     </tr>
   </script>
+
+  {% endverbatim %}
 </div>
 
 {% endblock content %}
