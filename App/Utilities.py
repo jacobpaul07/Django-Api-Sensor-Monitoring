@@ -100,5 +100,18 @@ def save_sensor_data(message):
         exc_type, exc_obj, exc_tb = sys.exc_info()
         f_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(exc_type, f_name, exc_tb.tb_lineno)
-        print("Check the port or Restart the system and try again")
 
+def write_gps_data(latitude, longitude):
+    try:
+        result_file_contents = read_result_file()
+        result_file_contents["gps_data"]["latitude"] = latitude
+        result_file_contents["gps_data"]["longitude"] = longitude
+         # Update Json Data
+        write_result_file(json_content=result_file_contents)
+        
+    except Exception as ex:
+        print("Error in write_gps_data: ", ex)
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        f_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, f_name, exc_tb.tb_lineno)
+        

@@ -3,7 +3,7 @@ import threading
 from django.apps import AppConfig
 from App.MQTT.mqtt_subscribe import mqtt_subscribe
 from App.views import StartRtuService
-
+from App.GPS.gps_data import GpsClass
 
 class MyAppConfig(AppConfig):
     name = "sih_python_django"
@@ -20,3 +20,5 @@ class MyAppConfig(AppConfig):
                 # thread.start()
             else:
                 StartRtuService.start_rtu()
+                thread = threading.Thread(target=GpsClass().gps_main, args=())
+                thread.start()
