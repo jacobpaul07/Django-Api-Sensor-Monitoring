@@ -12,8 +12,11 @@ def index(request):
     return render(request, 'index.html')
 
 
-def index_test(request):
+def index_test(request, deviceid=None):
     return render(request, 'test.html')
+
+def dashboard(request):
+    return render(request, 'dashboard.html')
 
 
 class StartRtuService(APIView):

@@ -26,7 +26,7 @@
 </head>
 
 <body>
-    {% block content %}
+
 
     <!-- Optional JavaScript; choose one of the two! -->
     <!-- Option 1: Bootstrap Bundle with Popper -->
@@ -122,9 +122,10 @@
         });
 
     </script>
+    {% verbatim %}
     <script id="MyTemplate" type="text/x-handlebars-template">
         <div class="row">
-            {% for my_item in this%}
+            {{#each this}}
             <div class="col">
                 <div class="card">
                     <div class="card-body">
@@ -133,9 +134,9 @@
                     </div>
                 </div>
             </div>
-            {% endfor %}
+            {{/each}}
         </div>
     </script>
-    {% endblock %}
+    {% endverbatim %}
 </body>
 </html>
