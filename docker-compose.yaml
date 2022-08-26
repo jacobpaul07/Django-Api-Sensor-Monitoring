@@ -9,6 +9,7 @@ services:
       "MQTT_BROKER_IP": "167.233.7.5"
       "MQTT_BROKER_PORT": "1883"
       "MQTT_MESSAGE_TOPIC": "IoT_SM/Message"
+      "MQTT_GPS_MESSAGE_TOPIC": "IoT_SM/GPS"
       "APPLICATION_MODE": "web"
       "MONGO_CONNECTION_STRING": "167.233.7.5:27017"
       "REDIS_IP": "172.11.0.3"

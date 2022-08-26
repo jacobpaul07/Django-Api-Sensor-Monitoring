@@ -8,7 +8,7 @@ from App.Utilities import save_sensor_data
 # Environmental Variables
 broker = str(os.environ['MQTT_BROKER_IP'])     # '167.233.7.5'
 port = int(os.environ['MQTT_BROKER_PORT'])     # 1883
-topic = str(os.environ['MQTT_MESSAGE_TOPIC'])  # "Test/message"
+topic = [str(os.environ['MQTT_MESSAGE_TOPIC']), str(os.environ['MQTT_GPS_MESSAGE_TOPIC']) ]  # "Test/message"
 client_id = "jacobsubscriber-001"
 
 
