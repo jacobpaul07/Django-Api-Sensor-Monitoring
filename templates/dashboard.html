@@ -60,13 +60,13 @@
   function initMap() {
     const deviceLocations = [
       { lat: 13.067439, lng: 80.237617 },
-      { lat: 12.067439, lng: 81.237617 },
-      { lat: 10.067439, lng: 82.237617 },
-      { lat: 14.067439, lng: 83.237617 },
+      { lat: 9.5829328, lng: 77.6838396 },
+      { lat: 9.067439, lng: 77.237617 },
+      { lat: 14.067439, lng: 77.237617 },
     ];
     map = new google.maps.Map(document.getElementById("map"), {
       center: deviceLocations[0],
-      zoom: 12,
+      zoom: 6,
     });
     deviceLocations.forEach((loc) => {
       let marker = new google.maps.Marker({
