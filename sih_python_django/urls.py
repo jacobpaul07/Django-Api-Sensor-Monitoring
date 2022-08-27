@@ -29,6 +29,8 @@ urlpatterns = [
 
     # Database URLs
     path('api/readspecifictimedata', history_views.ReadHistoryData().as_view()),
+    path('api/report', history_views.ReadReport().as_view()),
+
     path('', views.dashboard, name='index'),
     path('dashboard', views.dashboard, name='dashboard'),
     path('device/<str:deviceid>', views.index_test, name='index'),

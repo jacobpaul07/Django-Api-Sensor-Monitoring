@@ -61,16 +61,19 @@
             <div class="col">
                 <div id="map"></div>
                 <script
-                    src=https://maps.googleapis.com/maps/api/js?key=AIzaSyDRnhz_ShC_KIc8_joDpaPr67QRr0YV3EQ&callback=initMap&v=weekly&channel=2"
-                    async></script>
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRnhz_ShC_KIc8_joDpaPr67QRr0YV3EQ&callback=initMap&v=weekly&channel=2"
+                    async>
+                </script>
             </div>
         </div>
     </div>
-
     <script>
-
+        const host = "172.20.97.132:8090";
         let map;
         let marker;
+        const iconBase = "https://developers.google.com/maps/documentation/javascript/examples/full/images/";
+        const icon_src = "https://img.icons8.com/fluency/48/000000/marker-storm.png"
+        const icon_inactive = "https://img.icons8.com/sf-ultralight-filled/64/000000/marker-storm--v3.png"
         function initMap() {
 
             const myLatLng = { lat: 17.488741, lng: 78.346039 };
@@ -87,7 +90,7 @@
         }
 
         $(document).ready(function () {
-            const host = "127.0.0.1:8000"
+            // const host = "127.0.0.1:8000"
             const chatSocket = new WebSocket(
                 'ws://' + host + '/ws/app/notifications/'
             );
@@ -110,7 +113,7 @@
                 marker.setMap(null);
                 marker = new google.maps.Marker({
                     position: location,
-                    title: JSON.stringify(location),
+                    title: JSON.stringify(result),
                 });
                 marker.setMap(map);
                 map.setCenter(marker.getPosition())

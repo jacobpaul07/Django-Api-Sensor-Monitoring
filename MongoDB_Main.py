@@ -42,16 +42,74 @@ class Document:
 
     def SpecificDate_Document(self, Timestamp: str, filterField: str, col):
         collection = self.db[col]
-        date_time = datetime.datetime.strptime(Timestamp, "%Y-%m-%dT%H:%M:%S%z")
+        date_time = datetime.datetime.strptime(
+            Timestamp, "%Y-%m-%dT%H:%M:%S%z")
         from_date = datetime.datetime(date_time.year, date_time.month, date_time.day, date_time.hour, date_time.minute,
-                                       0, 000000)
+                                      0, 000000)
         to_date = datetime.datetime(date_time.year, date_time.month, date_time.day, date_time.hour, date_time.minute,
-                                     0, 000000) + datetime.timedelta(minutes=10)
-        criteria = {"$and": [{filterField: {"$gte": from_date, "$lte": to_date}}]}
+                                    0, 000000) + datetime.timedelta(minutes=10)
+        criteria = {
+            "$and": [{filterField: {"$gte": from_date, "$lte": to_date}}]}
         # criteria = {"$and": [{filterField: {"$gte": from_date, "$lte": to_date}}, {"machineID": machineID}]}
-        objects_found = list(collection.find(criteria, {"_id": 0}).sort(filterField, pymongo.ASCENDING))
+        objects_found = list(collection.find(
+            criteria, {"_id": 0}).sort(filterField, pymongo.ASCENDING))
         series = []
         if len(objects_found) > 0:
             series.append(objects_found[0])
         return series
 
+    def read_report(self, col):
+            collection = self.db[col]
+            data = collection.aggregate([
+                {
+                    '$sort': {
+                        'last_updated_timestamp': -1
+                    }
+                }, {
+                    '$addFields': {
+                        'convertedDate': {
+                            '$toDate': '$last_updated_timestamp'
+                        }
+                    }
+                }, {
+                    '$project': {
+                        'date': {
+                            '$dateToString': {
+                                'format': '%Y-%m-%d',
+                                'date': '$convertedDate'
+                            }
+                        },
+                        'sensor_data': '$sensor_data'
+                    }
+                }, {
+                    '$addFields': {
+                        'check': {
+                            '$and': [
+                                {
+                                    '$lte': [
+                                        '2022-08-20', '$date'
+                                    ]
+                                }, {
+                                    '$gte': [
+                                        '2022-08-26', '$date'
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }, {
+                    '$match': {
+                        'check': True
+                    }
+                }, {
+                    '$group': {
+                        '_id': {
+                            'date': '$date'
+                        },
+                        'data': {
+                            '$first': '$sensor_data'
+                        }
+                    }
+                }
+            ])
+            return list(data)

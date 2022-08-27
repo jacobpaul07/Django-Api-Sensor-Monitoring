@@ -27,4 +27,11 @@ class ReadHistoryData(APIView):
             exc_type, exc_obj, exc_tb = sys.exc_info()
             f_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print(exc_type, f_name, exc_tb.tb_lineno)
-    
+
+class ReadReport(APIView):
+
+    def get(self,request):
+        col="LiveData"
+        doc = Doc().read_report(col)
+        json_data = json.dumps(doc)
+        return HttpResponse(json_data, "application/json")

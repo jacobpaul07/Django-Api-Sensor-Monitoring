@@ -26,5 +26,15 @@
         "longitude": "9.5829328",
         "latitude": "77.6838396",
         "SignalStrength": "Low"
-    }
+    },
+    "gas_data": [
+        {
+            "tagName": "Pressure",
+            "value": 31.9
+        },
+        {
+            "tagName": "Relative Humidity",
+            "value": 31.9
+        }
+    ]
 }

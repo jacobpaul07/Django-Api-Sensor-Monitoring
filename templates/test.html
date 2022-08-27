@@ -87,6 +87,20 @@
             </div>
           </div>
 
+          <nav class="navbar navbar-expand-lg navbar-dark bg-dark mt-2">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Gas Sensor Data</a>
+            </div>
+        </nav>
+        <div id="gas_container" class="mt-2">
+            <div class="d-flex justify-content-center">
+                <strong>Waiting For Gas Sensor Data...</strong>
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading... </span>
+                </div>
+            </div>
+        </div>
+
           <!-- map section -->
           <div class="row mt-2">
             <div class="col">
@@ -259,23 +273,32 @@
       </div>
     </div>
   </div>
-
+  {% load static %}
   <script>
     let map;
     let marker;
+
+    
+    const icon_src="{% static 'icons/active.png' %}"
+    const icon_inactive="{% static 'icons/inactive.png' %}"
+    
+
     function initMap() {
       const myLatLng = { lat: 13.067439, lng: 80.237617 };
+      
       map = new google.maps.Map(document.getElementById("map"), {
         center: myLatLng,
         zoom: 12,
       });
       marker = new google.maps.Marker({
         position: myLatLng,
+        //icon: icon_inactive,
         //map,
         title: JSON.stringify(myLatLng),
       });
       marker.setMap(map);
     }
+    window.initMap = initMap;
 
     $(document).ready(function () {
       loadDataOnIntial();
@@ -300,11 +323,18 @@
         var template_gps = Handlebars.compile(gpstemplate);
         var gps_result = template_gps(parsedMessage.gps_data);
 
+        var gastemplate = $('#GasTemplate').html()
+        var template_gas = Handlebars.compile(gastemplate);
+        var gas_result = template_gas(parsedMessage.gas_data);
+
         $("#sensor_container").empty();
         $("#sensor_container").append(result);
 
         $("#gps_container").empty();
         $("#gps_container").append(gps_result);
+
+        $('#gas_container').empty();
+        $('#gas_container').append(gas_result)
 
         var parsedGpsData = parsedMessage.gps_data;
         let location = {
@@ -312,11 +342,26 @@
           lng: parseFloat(parsedGpsData.longitude),
         };
 
+        const contentString = result
+  const infowindow = new google.maps.InfoWindow({
+    content: contentString,
+  });
+
         marker.setMap(null);
         marker = new google.maps.Marker({
           position: location,
-          title: JSON.stringify(location),
+          title: JSON.stringify(result),
+          label: "D1",
+          icon: icon_src,
         });
+        marker.addListener("mouseover", () => {
+          infowindow.open({
+            anchor: marker,
+            map,
+            shouldFocus: false,
+          });
+        });
+
         marker.setMap(map);
         map.setCenter(marker.getPosition());
       };
@@ -536,6 +581,21 @@
     </div>
   </script>
 
+  <script id="GasTemplate" type="text/x-handlebars-template">
+    <div class="row">
+      {{#each this}}
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{tagName}}</h5>
+              <p id="pressure" class="card-text">{{value}}</p>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </script>
+
   <script id="template-sensor" type="text/x-handlebars-template">
     <tr id="{{rowIdx}}">
       <td class="row-index text-center">
@@ -595,3 +655,6 @@
 </div>
 
 {% endblock content %}
+
+
+
