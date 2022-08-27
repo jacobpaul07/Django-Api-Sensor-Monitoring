@@ -35,4 +35,6 @@ urlpatterns = [
     path('dashboard', views.dashboard, name='dashboard'),
     path('device/<str:deviceid>', views.index_test, name='index'),
     path('device', views.index_test, name='index'),
+    path('report', views.re, name='index')
+
 ]
