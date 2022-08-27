@@ -9,6 +9,15 @@
 <div class="container-fluid">
   <div class="card p-3 shadow">
     <h2 class="text-center p-3">IOT Sensor Monitoring</h2>
+    <div class="row">
+      <div class="col-xl-4"></div>
+      <div class="col-xl-4"></div>
+      <div class="col-xl-4">
+        <h5 class="float-end btn btn-warning" id="report">
+          <a href="/report">Report</a>
+        </h5>
+      </div>
+    </div>
     <nav>
       <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
         <button
@@ -49,6 +58,7 @@
         </button>
       </div>
     </nav>
+
     <div class="tab-content p-3 border bg-light" id="nav-tabContent">
       <div
         class="tab-pane fade active show"
@@ -89,17 +99,17 @@
 
           <nav class="navbar navbar-expand-lg navbar-dark bg-dark mt-2">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Gas Sensor Data</a>
+              <a class="navbar-brand" href="#">Gas Sensor Data</a>
             </div>
-        </nav>
-        <div id="gas_container" class="mt-2">
+          </nav>
+          <div id="gas_container" class="mt-2">
             <div class="d-flex justify-content-center">
-                <strong>Waiting For Gas Sensor Data...</strong>
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading... </span>
-                </div>
+              <strong>Waiting For Gas Sensor Data...</strong>
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading... </span>
+              </div>
             </div>
-        </div>
+          </div>
 
           <!-- map section -->
           <div class="row mt-2">
@@ -279,14 +289,12 @@
     let map;
     let marker;
 
-    
-    const icon_src="{% static 'icons/active.png' %}"
-    const icon_inactive="{% static 'icons/inactive.png' %}"
-    
+    const icon_src = "{% static 'icons/active.png' %}";
+    const icon_inactive = "{% static 'icons/inactive.png' %}";
 
     function initMap() {
       const myLatLng = { lat: 13.067439, lng: 80.237617 };
-      
+
       map = new google.maps.Map(document.getElementById("map"), {
         center: myLatLng,
         zoom: 12,
@@ -313,8 +321,9 @@
       chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         var parsedMessage = data.message;
-        console.log(data.message);
-        debugger;
+   
+       
+
         // compile the template
         var mytemplate = $("#SensorTemplate").html();
         var template = Handlebars.compile(mytemplate);
@@ -324,7 +333,7 @@
         var template_gps = Handlebars.compile(gpstemplate);
         var gps_result = template_gps(parsedMessage.gps_data);
 
-        var gastemplate = $('#GasTemplate').html()
+        var gastemplate = $("#GasTemplate").html();
         var template_gas = Handlebars.compile(gastemplate);
         var gas_result = template_gas(parsedMessage.gas_data);
 
@@ -334,8 +343,8 @@
         $("#gps_container").empty();
         $("#gps_container").append(gps_result);
 
-        $('#gas_container').empty();
-        $('#gas_container').append(gas_result)
+        $("#gas_container").empty();
+        $("#gas_container").append(gas_result);
 
         var parsedGpsData = parsedMessage.gps_data;
         let location = {
@@ -343,10 +352,10 @@
           lng: parseFloat(parsedGpsData.longitude),
         };
 
-        const contentString = result
-  const infowindow = new google.maps.InfoWindow({
-    content: contentString,
-  });
+        const contentString = result;
+        const infowindow = new google.maps.InfoWindow({
+          content: contentString,
+        });
 
         marker.setMap(null);
         marker = new google.maps.Marker({
@@ -662,11 +671,7 @@
       </td>
     </tr>
   </script>
-
   {% endverbatim %}
 </div>
 
 {% endblock content %}
-
-
-

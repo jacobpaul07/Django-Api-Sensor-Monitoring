@@ -1,0 +1,73 @@
+{% extends "base.html" %} {% block content %}
+<div class="container-fluid p-3">
+  <nav>
+    <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+      <button
+      class="nav-link active"
+      id="nav-garph-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#nav-graph"
+      type="button"
+      role="tab"
+      aria-controls="nav-graph"
+      aria-selected="true"
+    >
+      Garph Data
+    </button>
+      <button
+        class="nav-link"
+        id="nav-report-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#nav-report"
+        type="button"
+        role="tab"
+        aria-controls="nav-report"
+        aria-selected="false"
+      >
+        Device Report
+      </button>
+    </div>
+  </nav>
+  <div class="tab-content p-3 border bg-light" id="nav-tabContent">
+    <div
+      class="tab-pane fade active show"
+      role="tabpanel"
+      aria-labelledby="nav-report"
+      id="nav-report"
+    >
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">date</th>
+            <th scope="col">Temperature</th>
+            <th scope="col">pressure</th>
+            <th scope="col">Flow</th>
+            <th scope="col">LDR</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!-- jinja2 Technique -->
+          {% if data %} {% for i in data %}
+          <tr>
+            <td>{{i.date}}</td>
+            {% for j in i.sensor_data %}
+            <td>{{j.value}}</td>
+            {% endfor %}
+          </tr>
+          <tr></tr>
+          {% endfor %} {% endif %}
+        </tbody>
+      </table>
+    </div>
+    <div
+      class="tab-pane fade"
+      role="tabpanel"
+      aria-labelledby="nav-grpah"
+      id="nav-graph"
+    >
+      <h1>Graph</h1>
+    </div>
+  </div>
+</div>
+{% endblock content %}

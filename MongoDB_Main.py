@@ -59,57 +59,67 @@ class Document:
         return series
 
     def read_report(self, col):
-            collection = self.db[col]
-            data = collection.aggregate([
-                {
-                    '$sort': {
-                        'last_updated_timestamp': -1
-                    }
-                }, {
-                    '$addFields': {
-                        'convertedDate': {
-                            '$toDate': '$last_updated_timestamp'
-                        }
-                    }
-                }, {
-                    '$project': {
-                        'date': {
-                            '$dateToString': {
-                                'format': '%Y-%m-%d',
-                                'date': '$convertedDate'
-                            }
-                        },
-                        'sensor_data': '$sensor_data'
-                    }
-                }, {
-                    '$addFields': {
-                        'check': {
-                            '$and': [
-                                {
-                                    '$lte': [
-                                        '2022-08-20', '$date'
-                                    ]
-                                }, {
-                                    '$gte': [
-                                        '2022-08-26', '$date'
-                                    ]
-                                }
-                            ]
-                        }
-                    }
-                }, {
-                    '$match': {
-                        'check': True
-                    }
-                }, {
-                    '$group': {
-                        '_id': {
-                            'date': '$date'
-                        },
-                        'data': {
-                            '$first': '$sensor_data'
-                        }
+        collection = self.db[col]
+        data = collection.aggregate([
+            {
+                '$addFields': {
+                    'convertedDate': {
+                        '$toDate': '$last_updated_timestamp'
                     }
                 }
-            ])
-            return list(data)
+            }, {
+                '$project': {
+                    'date': {
+                        '$dateToString': {
+                            'format': '%Y-%m-%d',
+                            'date': '$convertedDate'
+                        }
+                    },
+                    'sensor_data': '$sensor_data'
+                }
+            }, {
+                '$addFields': {
+                    'check': {
+                        '$and': [
+                            {
+                                '$lte': [
+                                    '2022-08-20', '$date'
+                                ]
+                            }, {
+                                '$gte': [
+                                    '2022-08-26', '$date'
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }, {
+                '$match': {
+                    'check': True
+                }
+            }, {
+                '$group': {
+                    '_id': {
+                        'date': '$date'
+                    },
+                    'data': {
+                        '$first': '$sensor_data'
+                    }
+                }
+            }, {
+                '$addFields': {
+                    'date': '$_id.date',
+                    'sensor_data': '$data'
+                }
+            }, {
+                '$project': {
+                    '_id': 0,
+                    'data': 0
+                }
+            }, {
+                '$sort': {
+                    'date': -1
+                }
+            }
+        ])
+        return list(data)
