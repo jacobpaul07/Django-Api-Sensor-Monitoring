@@ -130,6 +130,7 @@
                   <th class="text-center">Address</th>
                   <th class="text-center">Span High</th>
                   <th class="text-center">Span Low</th>
+                  <th class="text-center">Unit</th>
                   <th class="text-center">Description</th>
                   <th class="text-center">Remove Row</th>
                 </tr>
@@ -292,7 +293,7 @@
       });
       marker = new google.maps.Marker({
         position: myLatLng,
-        //icon: icon_inactive,
+        icon: icon_inactive,
         //map,
         title: JSON.stringify(myLatLng),
       });
@@ -383,6 +384,7 @@
           address: "",
           span_high: "",
           span_low: "",
+          unit: "",
           description: "",
         };
         var mytemplate = $("#template-sensor").html();
@@ -494,12 +496,14 @@
           let address = $(ele).find(`[data-name=address]`).val();
           let spanHigh = $(ele).find(`[data-name=span_high]`).val();
           let spanLow = $(ele).find(`[data-name=span_low]`).val();
+          let unit = $(ele).find(`[data-name=unit]`).val();
           let description = $(ele).find(`[data-name=description]`).val();
           let newRow = {
             devicename: deviceName,
             address,
             span_high: spanHigh,
             span_low: spanLow,
+            unit,
             description,
           };
           rowData.push(newRow);
@@ -631,6 +635,14 @@
           data-name="span_low"
           name="span_low-{{rowIdx}}"
           value="{{span_low}}"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          data-name="unit"
+          name="unit-{{rowIdx}}"
+          value="{{unit}}"
         />
       </td>
       <td>
