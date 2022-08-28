@@ -101,12 +101,13 @@ def save_sensor_data(message):
         f_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(exc_type, f_name, exc_tb.tb_lineno)
 
-def write_gps_data(latitude, longitude):
+def write_gps_data(latitude, longitude, time):
     try:
         result_file_contents = read_result_file()
         result_file_contents["gps_data"]["latitude"] = latitude
         result_file_contents["gps_data"]["longitude"] = longitude
-         # Update Json Data
+        result_file_contents["gps_data"]["gps_alert_time"] = time
+        # Update Json Data
         write_result_file(json_content=result_file_contents)
         
     except Exception as ex:

@@ -4,11 +4,14 @@ http://www.electronicwings.com
 '''
 import serial  # import serial pacakge
 from time import sleep
+from datetime import datetime
 import webbrowser  # import package for opening link in browser
+from App.SMS.Serial_Input import SerialDevice
 import sys
 import os  # import system package
 from App.Utilities import write_gps_data
 from App.MQTT.mqtt_publisher import mqtt_gps_publish
+from App.Utilities import read_result_file
 
 
 class GpsClass:
@@ -86,12 +89,56 @@ class GpsClass:
                           " long in degree: ", self.long_in_degrees, '\n')
                     lat_str = str(self.lat_in_degrees)
                     long_str = str(self.long_in_degrees)
-                    write_gps_data(latitude=lat_str, longitude=long_str)
                     gps_data = {
                         "latitude": lat_str,
                         "longitude": long_str
                     }
+                    
                     mqtt_gps_publish(message=gps_data)
+                    result_file = read_result_file()
+                    now = datetime.now()
+                    latitude = result_file['gps_data']['latitude']
+                    longitude = result_file['gps_data']['longitude']
+                    gps_alert_time = result_file['gps_data']['gps_alert_time']
+                    write_gps_data(latitude=lat_str, longitude=long_str, time=gps_alert_time)
+
+                    # Alert GPS Location Data
+                    if os.environ["MODE"] != "WAREHOUSE":
+
+                        if gps_alert_time != "":
+                            # previous_alert_time_pds = pandas.to_datetime(previous_alert_time)
+                            gps_alert_time_pds = datetime.strptime(gps_alert_time, '%Y-%m-%d %H:%M:%S.%f')
+                            gps_alert_time_difference = now - gps_alert_time_pds
+                            gps_difference_seconds = gps_alert_time_difference.seconds
+
+                        else:
+                            gps_difference_seconds = 0
+                        
+                        if gps_difference_seconds >= 600 or gps_difference_seconds==0:
+                            if str(latitude) == str(lat_str) and str(longitude) == str(long_str):
+                                tag_name="GPS -"
+                                alert_msg = "Device is in the same location"
+                                SerialDevice().serial_write(tag_name=tag_name, alert=alert_msg)
+                                result_file['gps_data']['gps_alert_time']=str(now)
+                    
+                    else:
+                        if gps_alert_time != "":
+                            # previous_alert_time_pds = pandas.to_datetime(previous_alert_time)
+                            gps_alert_time_pds = datetime.strptime(gps_alert_time, '%Y-%m-%d %H:%M:%S.%f')
+                            gps_alert_time_difference = now - gps_alert_time_pds
+                            gps_difference_seconds = gps_alert_time_difference.seconds
+
+                        else:
+                            gps_difference_seconds = 0
+                        
+                        if gps_difference_seconds >= 600 or gps_difference_seconds==0:
+                            if str(latitude) != str(lat_str) and str(longitude) != str(long_str):
+                                tag_name="GPS -"
+                                alert_msg = "Device is in the same location"
+                                SerialDevice().serial_write(tag_name=tag_name, alert=alert_msg)
+                                result_file['gps_data']['gps_alert_time']=str(now)
+
+                    write_gps_data(latitude=lat_str, longitude=long_str, time=str(now))
                     # map_link = 'http://maps.google.com/?q=' + lat_in_degrees + ',' + long_in_degrees    #create link to plot location on Google map
                     # print("<<<<<<<<press ctrl+c to plot location on google maps>>>>>>\n",map_link)               #press ctrl+c to plot on map and exit
                     print(

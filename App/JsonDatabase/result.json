@@ -16,16 +16,17 @@
             "alert_timestamp": "2022-08-18 23:06:20.759948"
         },
         {
-            "tagName": "LDR",
+            "tagName": "Light Intensity",
             "value": 0.3,
             "alert_timestamp": "2022-08-18 23:06:20.759948"
         }
     ],
     "last_updated_timestamp": "2022-08-18 23:08:15.534408",
     "gps_data": {
-        "longitude": "9.5829328",
-        "latitude": "77.6838396",
-        "SignalStrength": "Low"
+        "longitude": "77.6838396",
+        "latitude": "9.5829328",
+        "SignalStrength": "Low",
+        "gps_alert_time":""
     },
     "gas_data": [
         {

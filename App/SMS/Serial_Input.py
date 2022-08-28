@@ -11,7 +11,7 @@ class SerialDevice:
         SERIALPORT=os.environ['SERIALPORT']
         device = serial.Serial(port=SERIALPORT, baudrate=115200)
         
-    def serial_write(self, config, tag_name, alert):
+    def serial_write(self, tag_name, alert):
         try:
             users = read_usr()
             user_list:list = users["user"]
