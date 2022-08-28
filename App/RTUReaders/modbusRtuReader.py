@@ -41,6 +41,7 @@ def read_rtu(settings, config, callback):
                 span_high=int(tags["span_high"])
                 span_low=int(tags["span_low"])
                 sensor_name=tags["devicename"]
+                unit=tags["unit"]
 
                 register_data = c.read_input_registers(address=tag_address, count=1, unit=unit_number)
                 registerValue = register_data.registers
@@ -51,7 +52,8 @@ def read_rtu(settings, config, callback):
                 data = {
                     "tagName": sensor_name,
                     "value": registerValue[0] / 10,
-                    "alert_timestamp": previous_alert_time
+                    "alert_timestamp": previous_alert_time,
+                    "unit":unit
                     }
 
                 datas_list.append(data)
