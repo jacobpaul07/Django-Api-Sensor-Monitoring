@@ -1,0 +1,62 @@
+0:08
+
+IOT Solution Architecture:
+
+This is our solution Architecture of our prototype, we have divided it into three layers namely Data Acquisition/ Edge Layer, Cloud Layer, Presentatioon Layer.
+
+Data Acquisition Layer:
+In the Data Acquisition/ Edge Layer the GPS data ans sensor data is collected by the PLC and are are sent to the Edge device (RaspberryPi), 
+using MODBUS protocol. The Acquired data is then processed by our Python Agent and is published to the Cloud (MQTT Broker).   
+
+Cloud Layer:
+In the Cloud layer the MQTT subscriber continiously subscribes the topic in which the data is sent. and then the subscribed data is stored in the mongo DB,
+and the live data is published via websockt to the presentation layer.
+
+Presentation Layer:
+In the Presentation Layer, the live data is displayed, The Presentation layers also allows us to view th history data and Aggregated reports as well.
+
+0:40
+
+Hardware Setup
+This is the hardware setup of our prototype. here we have the SELEC Twix 2 as the controller(PLC) which collects the sensor data, and some sensors like temprature, etc.,
+and the GATEWAY (Raspberry PI) which collects the data from the PLC and sends it to the cloud.
+
+0:58
+DEMO
+
+For the demo purpose, we have taken one glass of hot water and one glass of ice water(cold water), first we are filling one of the glass with hot water 
+in which the temperature sensor is already present, and the live change in temperature is been displayed on the web page and mobile app. when the temperature 
+attains the threshold of about greater than 50 C (attains highest threshold), an alert is send to the user as shown, as a next step we are placing our sensor in the cold water. 
+And again when the temperature drops below 10 C (attains lowest threshold), an alert is sent to the user as shown. The place of occurance is also plotted on the map. 
+This can be viewed on mobile app also.  
+
+
+
+Hardware 
+
+1. PLC - 2000
+2. Raspberry Pi - 3000
+3. sensors - 2000
+
+
+for the insdustrial standard gateways the cost of the device varies from 10k to 20k based of features live waterprofing IP cetificate.
+sensors rates may vary for different purposes.
+
+AWS Costing
+
+1 million API req / month = 1 USD
+1 million Rest API / month = 3.50 USD
+1 million Websocket message/ day = 30.42 USD
+
+Volume Type				Price
+General Purpose SSD (gp3) - Storage	$0.08/GB-month
+General Purpose SSD (gp3) - IOPS	3,000 IOPS free and $0.005/provisioned IOPS-month over 3,000
+General Purpose SSD (gp3) - Throughput	125 MB/s free and $0.04/provisioned MB/s-month over 125
+General Purpose SSD (gp2) Volumes	$0.10 per GB-month of provisioned storage
+Provisioned IOPS SSD (io2) - Storage	$0.125/GB-month
+Provisioned IOPS SSD (io2) - IOPS	$0.065/provisioned IOPS-month up to 32,000 IOPS
+
+$0.046/provisioned IOPS-month from 32,001 to 64,000 IOPS
+
+
+
